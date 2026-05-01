@@ -48,12 +48,12 @@ Note: Knex CLI loading was verified, but local migration execution is pending be
 
 ## Milestone 4: Adjutor Karma Blacklist Integration
 
-- [ ] Add Adjutor client.
-- [ ] Add blacklist service.
-- [ ] Add Adjutor environment variables.
-- [ ] Save blacklist check evidence.
-- [ ] Mock Adjutor in tests.
-- [ ] Document fail-closed onboarding behavior.
+- [x] Add Adjutor client.
+- [x] Add blacklist service.
+- [x] Add Adjutor environment variables.
+- [x] Save blacklist check evidence.
+- [x] Mock Adjutor in tests.
+- [x] Document fail-closed onboarding behavior.
 
 ## Milestone 5: User Onboarding
 

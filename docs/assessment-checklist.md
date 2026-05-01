@@ -87,7 +87,7 @@ This checklist converts the Lendsqr Backend Engineer Assessment into acceptance 
 - [ ] Transfer missing recipient test.
 - [ ] Transfer same-wallet rejection test.
 - [ ] Unauthorized wallet access tests.
-- [ ] External Adjutor API mocked in tests.
+- [x] External Adjutor API mocked in tests.
 - [ ] Test database setup documented.
 
 ## Documentation Requirements

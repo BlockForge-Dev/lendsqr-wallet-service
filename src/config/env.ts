@@ -3,6 +3,8 @@ import { z } from 'zod';
 
 dotenv.config({ quiet: true });
 
+const defaultAdjutorBaseUrl = 'https://adjutor.lendsqr.com/v2';
+
 const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   PORT: z.coerce.number().int().positive().default(3000),
@@ -11,6 +13,11 @@ const envSchema = z.object({
   DATABASE_USER: z.string().min(1).default('root'),
   DATABASE_PASSWORD: z.string().default(''),
   DATABASE_NAME: z.string().min(1).default('lendsqr_wallet_service'),
+  ADJUTOR_BASE_URL: z
+    .union([z.string().url(), z.literal('')])
+    .optional()
+    .transform((value) => value || defaultAdjutorBaseUrl),
+  ADJUTOR_API_KEY: z.string().default(''),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);

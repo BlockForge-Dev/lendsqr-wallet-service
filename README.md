@@ -4,9 +4,9 @@ This project implements a wallet MVP for Demo Credit, a lending application. The
 
 ## Status
 
-Current milestone: Milestone 3 - Shared Application Infrastructure implemented.
+Current milestone: Milestone 4 - Adjutor Karma Blacklist Integration implemented.
 
-Next milestone: Milestone 4 - Adjutor Karma Blacklist Integration.
+Next milestone: Milestone 5 - User Onboarding.
 
 ## Problem Statement
 
@@ -132,7 +132,16 @@ Full authentication is out of scope for the assessment. The MVP will use faux au
 
 ## Karma Blacklist Integration
 
-User onboarding will call Adjutor Karma before any user or wallet record is created. The integration will be isolated behind a client/service boundary so it can be mocked during tests.
+The Adjutor Karma integration is isolated behind a client/service boundary so it can be mocked during tests. User onboarding will call this service before any user or wallet record is created.
+
+Implementation details:
+
+- `AdjutorClient` calls `GET /verification/karma/:identity`.
+- Adjutor authentication uses `Authorization: Bearer <ADJUTOR_API_KEY>`.
+- `BlacklistService` persists successful lookup evidence in `blacklist_checks`.
+- A Karma response with data is treated as blacklisted.
+- A provider `404` is treated as a completed lookup with no blacklist match.
+- Missing API key, network failure, and non-404 provider errors fail closed with `BLACKLIST_PROVIDER_UNAVAILABLE`.
 
 The MVP will fail closed if blacklist verification cannot be completed. This is safer for a lending product because users with unknown blacklist status should not be onboarded.
 
@@ -179,7 +188,7 @@ DATABASE_PORT=3306
 DATABASE_USER=root
 DATABASE_PASSWORD=
 DATABASE_NAME=lendsqr_wallet_service
-ADJUTOR_BASE_URL=
+ADJUTOR_BASE_URL=https://adjutor.lendsqr.com/v2
 ADJUTOR_API_KEY=
 ```
 
