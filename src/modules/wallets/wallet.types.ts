@@ -41,6 +41,18 @@ export type FundWalletResult = {
   transaction: TransactionRecord;
 };
 
+export type WithdrawWalletInput = {
+  walletId: string;
+  userId: string;
+  amountMinor: number;
+  description?: string;
+};
+
+export type WithdrawWalletResult = {
+  wallet: WalletRecord;
+  transaction: TransactionRecord;
+};
+
 export type WalletFundingDependencies = {
   wallets: WalletMutationStore;
   transactions: TransactionStore;

@@ -9,10 +9,17 @@ const descriptionSchema = z
   .optional()
   .transform((value) => value || undefined);
 
+const walletMutationBodySchema = z.object({
+  amount: z.number().int().positive(),
+  description: descriptionSchema,
+});
+
 export const fundWalletSchema = {
   params: walletIdParamsSchema,
-  body: z.object({
-    amount: z.number().int().positive(),
-    description: descriptionSchema,
-  }),
+  body: walletMutationBodySchema,
+};
+
+export const withdrawWalletSchema = {
+  params: walletIdParamsSchema,
+  body: walletMutationBodySchema,
 };

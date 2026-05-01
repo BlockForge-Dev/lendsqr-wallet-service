@@ -20,7 +20,7 @@ This checklist converts the Lendsqr Backend Engineer Assessment into acceptance 
 - [x] User gets exactly one wallet after successful onboarding.
 - [x] User can fund wallet.
 - [ ] User can transfer funds to another wallet.
-- [ ] User can withdraw funds.
+- [x] User can withdraw funds.
 - [ ] User can view wallet transaction history.
 - [x] Faux authentication is implemented with `x-user-id`.
 - [x] User cannot operate on another user's wallet.
@@ -33,7 +33,7 @@ This checklist converts the Lendsqr Backend Engineer Assessment into acceptance 
 - [ ] Every balance change creates a durable transaction record.
 - [x] Transaction references are unique.
 - [x] Funding operation is atomic.
-- [ ] Withdrawal operation is atomic.
+- [x] Withdrawal operation is atomic.
 - [ ] Transfer operation is atomic.
 - [ ] Failed transfer does not debit sender.
 - [ ] Failed transfer does not credit recipient.
@@ -59,7 +59,7 @@ This checklist converts the Lendsqr Backend Engineer Assessment into acceptance 
 - [x] `POST /api/v1/users`.
 - [ ] `GET /api/v1/wallets/:walletId`.
 - [x] `POST /api/v1/wallets/:walletId/fund`.
-- [ ] `POST /api/v1/wallets/:walletId/withdraw`.
+- [x] `POST /api/v1/wallets/:walletId/withdraw`.
 - [ ] `POST /api/v1/wallets/:walletId/transfers`.
 - [ ] `GET /api/v1/wallets/:walletId/transactions`.
 - [x] Consistent success responses.
@@ -78,9 +78,9 @@ This checklist converts the Lendsqr Backend Engineer Assessment into acceptance 
 - [x] Duplicate phone rejection test.
 - [x] Funding success test.
 - [x] Funding invalid amount tests.
-- [ ] Withdrawal success test.
-- [ ] Withdrawal insufficient funds test.
-- [ ] Withdrawal invalid amount tests.
+- [x] Withdrawal success test.
+- [x] Withdrawal insufficient funds test.
+- [x] Withdrawal invalid amount tests.
 - [ ] Transfer success test.
 - [ ] Transfer transaction record test.
 - [ ] Transfer insufficient funds test.

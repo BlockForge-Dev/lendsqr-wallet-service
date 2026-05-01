@@ -80,14 +80,14 @@ Note: Knex CLI loading was verified, but local migration execution is pending be
 
 ## Milestone 7: Wallet Withdrawal
 
-- [ ] Add withdraw validation.
-- [ ] Enforce faux auth.
-- [ ] Enforce wallet ownership.
-- [ ] Validate positive amount.
-- [ ] Check sufficient funds.
-- [ ] Lock wallet row during mutation.
-- [ ] Create `WITHDRAW` transaction record.
-- [ ] Add withdrawal tests.
+- [x] Add withdraw validation.
+- [x] Enforce faux auth.
+- [x] Enforce wallet ownership.
+- [x] Validate positive amount.
+- [x] Check sufficient funds.
+- [x] Lock wallet row during mutation.
+- [x] Create `WITHDRAW` transaction record.
+- [x] Add withdrawal tests.
 
 ## Milestone 8: Wallet-to-Wallet Transfer
 

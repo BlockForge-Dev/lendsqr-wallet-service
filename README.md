@@ -4,9 +4,9 @@ This project implements a wallet MVP for Demo Credit, a lending application. The
 
 ## Status
 
-Current milestone: Milestone 6 - Wallet Funding implemented.
+Current milestone: Milestone 7 - Wallet Withdrawal implemented.
 
-Next milestone: Milestone 7 - Wallet Withdrawal.
+Next milestone: Milestone 8 - Wallet-to-Wallet Transfer.
 
 ## Problem Statement
 
@@ -32,7 +32,7 @@ Demo Credit needs a backend wallet service that allows eligible users to receive
 | User account creation           | `POST /api/v1/users`                          | Implemented |
 | Wallet creation                 | One wallet created during onboarding          | Implemented |
 | Wallet funding                  | `POST /api/v1/wallets/:walletId/fund`         | Implemented |
-| Wallet withdrawal               | `POST /api/v1/wallets/:walletId/withdraw`     | Planned     |
+| Wallet withdrawal               | `POST /api/v1/wallets/:walletId/withdraw`     | Implemented |
 | Wallet transfer                 | `POST /api/v1/wallets/:walletId/transfers`    | Planned     |
 | Karma blacklist check           | Adjutor client isolated behind service        | Implemented |
 | Faux authentication             | `x-user-id` request header middleware         | Implemented |
@@ -104,6 +104,24 @@ Funding flow:
 - Commit the balance update and transaction record atomically.
 
 Funding returns the updated wallet and the created transaction record.
+
+## Wallet Withdrawal
+
+`POST /api/v1/wallets/:walletId/withdraw` simulates withdrawal because no bank payout provider is required for the assessment.
+
+Withdrawal flow:
+
+- Require faux auth through `x-user-id`.
+- Validate `walletId`, positive integer `amount`, and optional description.
+- Open a database transaction.
+- Lock the wallet row with `FOR UPDATE`.
+- Confirm the authenticated user owns the wallet.
+- Check that the wallet has sufficient funds.
+- Decrease `balance_minor` using minor-unit integer arithmetic.
+- Create a `WITHDRAW` transaction record with before and after balances.
+- Commit the balance update and transaction record atomically.
+
+Insufficient funds are rejected before any balance update or transaction record is created.
 
 ## Database Design
 
