@@ -12,7 +12,7 @@ export default [
   {
     files: ['**/*.ts'],
     rules: {
-      'no-console': ['warn', { allow: ['info', 'error'] }],
+      'no-console': ['warn', { allow: ['info', 'warn', 'error'] }],
       'no-undef': 'off',
     },
   },

@@ -39,12 +39,12 @@ Note: Knex CLI loading was verified, but local migration execution is pending be
 
 ## Milestone 3: Shared Application Infrastructure
 
-- [ ] Add `AppError`.
-- [ ] Add error-handling middleware.
-- [ ] Add request validation middleware.
-- [ ] Add faux auth middleware.
-- [ ] Add response helpers.
-- [ ] Add money validation helpers.
+- [x] Add `AppError`.
+- [x] Add error-handling middleware.
+- [x] Add request validation middleware.
+- [x] Add faux auth middleware.
+- [x] Add response helpers.
+- [x] Add money validation helpers.
 
 ## Milestone 4: Adjutor Karma Blacklist Integration
 

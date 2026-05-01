@@ -62,12 +62,12 @@ This checklist converts the Lendsqr Backend Engineer Assessment into acceptance 
 - [ ] `POST /api/v1/wallets/:walletId/withdraw`.
 - [ ] `POST /api/v1/wallets/:walletId/transfers`.
 - [ ] `GET /api/v1/wallets/:walletId/transactions`.
-- [ ] Consistent success responses.
-- [ ] Consistent error responses.
-- [ ] Validation errors return `400`.
-- [ ] Missing faux auth returns `401`.
+- [x] Consistent success responses.
+- [x] Consistent error responses.
+- [x] Validation errors return `400`.
+- [x] Missing faux auth returns `401`.
 - [ ] Cross-wallet access returns `403`.
-- [ ] Missing resources return `404`.
+- [x] Missing resources return `404`.
 
 ## Testing Requirements
 

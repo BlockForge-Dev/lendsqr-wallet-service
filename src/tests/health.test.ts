@@ -12,3 +12,15 @@ describe('GET /health', () => {
     });
   });
 });
+
+describe('unknown routes', () => {
+  it('returns a consistent not found response', async () => {
+    const response = await request(app).get('/missing-route').expect(404);
+
+    expect(response.body).toEqual({
+      success: false,
+      message: 'Route GET /missing-route not found',
+      errorCode: 'ROUTE_NOT_FOUND',
+    });
+  });
+});

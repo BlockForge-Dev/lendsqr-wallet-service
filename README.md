@@ -4,9 +4,9 @@ This project implements a wallet MVP for Demo Credit, a lending application. The
 
 ## Status
 
-Current milestone: Milestone 2 - Database and Knex Setup implemented.
+Current milestone: Milestone 3 - Shared Application Infrastructure implemented.
 
-Next milestone: Milestone 3 - Shared Application Infrastructure.
+Next milestone: Milestone 4 - Adjutor Karma Blacklist Integration.
 
 ## Problem Statement
 
@@ -50,6 +50,28 @@ The service will use a simple layered architecture:
 - Application layer: Services and use cases for business rules and transaction orchestration.
 - Persistence layer: Repositories using Knex and explicit database transactions.
 - External integration layer: Adjutor Karma API client and blacklist service.
+
+## Shared Application Infrastructure
+
+The API includes shared middleware and helpers for:
+
+- Consistent operational errors through `AppError`.
+- Consistent JSON error responses through the global error handler.
+- Zod-backed request validation through `validateRequest`.
+- Faux authentication through the `x-user-id` request header.
+- Not-found route handling.
+- Money validation in minor units.
+- Shared success response helpers for feature endpoints.
+
+Standard error shape:
+
+```json
+{
+  "success": false,
+  "message": "Insufficient wallet balance",
+  "errorCode": "INSUFFICIENT_FUNDS"
+}
+```
 
 ## Database Design
 
