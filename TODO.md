@@ -26,14 +26,16 @@ This file tracks the assessment roadmap from planning through submission.
 
 ## Milestone 2: Database and Knex Setup
 
-- [ ] Configure `knexfile.ts`.
-- [ ] Add database connection module.
-- [ ] Add users migration.
-- [ ] Add wallets migration.
-- [ ] Add transactions migration.
-- [ ] Add blacklist checks migration.
-- [ ] Add migration scripts.
-- [ ] Verify migration and rollback commands.
+- [x] Configure `knexfile.ts`.
+- [x] Add database connection module.
+- [x] Add users migration.
+- [x] Add wallets migration.
+- [x] Add transactions migration.
+- [x] Add blacklist checks migration.
+- [x] Add migration scripts.
+- [ ] Verify migration and rollback commands against a running MySQL database.
+
+Note: Knex CLI loading was verified, but local migration execution is pending because no MySQL service is listening on `localhost:3306` in the current environment.
 
 ## Milestone 3: Shared Application Infrastructure
 

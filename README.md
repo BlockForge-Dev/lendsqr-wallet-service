@@ -4,9 +4,9 @@ This project implements a wallet MVP for Demo Credit, a lending application. The
 
 ## Status
 
-Current milestone: Milestone 1 - Project Initialization complete.
+Current milestone: Milestone 2 - Database and Knex Setup implemented.
 
-Next milestone: Milestone 2 - Database and Knex Setup.
+Next milestone: Milestone 3 - Shared Application Infrastructure.
 
 ## Problem Statement
 
@@ -58,9 +58,28 @@ Planned tables:
 - `users`: onboarded customers.
 - `wallets`: current wallet balances in minor units.
 - `transactions`: immutable wallet movement records.
-- `blacklist_checks`: audit evidence for Karma onboarding checks.
+- `blacklist_checks`: audit evidence for Karma onboarding checks. The `user_id` column is nullable so rejected or failed onboarding checks can still be recorded before a user exists.
 
 The database will enforce key invariants such as unique user identity fields, one wallet per user, non-negative wallet balances, and unique transaction references.
+
+## Running Migrations
+
+Create the local databases first:
+
+```sql
+CREATE DATABASE lendsqr_wallet_service;
+CREATE DATABASE lendsqr_wallet_service_test;
+```
+
+Then configure `.env` and run:
+
+```bash
+npm run migrate:latest
+npm run migrate:status
+npm run migrate:rollback
+```
+
+The Knex CLI uses `knexfile.ts` and the migrations in `src/database/migrations`.
 
 ## E-R Diagram
 

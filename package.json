@@ -12,6 +12,9 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint .",
+    "migrate:latest": "knex --knexfile knexfile.ts migrate:latest",
+    "migrate:rollback": "knex --knexfile knexfile.ts migrate:rollback",
+    "migrate:status": "knex --knexfile knexfile.ts migrate:status",
     "start": "node dist/server.js",
     "test": "jest --runInBand",
     "test:watch": "jest --watch"

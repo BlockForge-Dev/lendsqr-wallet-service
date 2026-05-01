@@ -6,11 +6,11 @@ This checklist converts the Lendsqr Backend Engineer Assessment into acceptance 
 
 - [x] Node.js used.
 - [x] TypeScript used.
-- [ ] KnexJS used.
-- [ ] MySQL used.
+- [x] KnexJS used.
+- [x] MySQL used.
 - [x] Express or equivalent HTTP framework used.
 - [x] Environment variables documented.
-- [ ] Knex migrations included.
+- [x] Knex migrations included.
 
 ## Product Requirements
 
