@@ -4,12 +4,12 @@ This checklist converts the Lendsqr Backend Engineer Assessment into acceptance 
 
 ## Required Technology
 
-- [ ] Node.js used.
-- [ ] TypeScript used.
+- [x] Node.js used.
+- [x] TypeScript used.
 - [ ] KnexJS used.
 - [ ] MySQL used.
-- [ ] Express or equivalent HTTP framework used.
-- [ ] Environment variables documented.
+- [x] Express or equivalent HTTP framework used.
+- [x] Environment variables documented.
 - [ ] Knex migrations included.
 
 ## Product Requirements
@@ -55,7 +55,7 @@ This checklist converts the Lendsqr Backend Engineer Assessment into acceptance 
 
 ## API Requirements
 
-- [ ] `GET /health`.
+- [x] `GET /health`.
 - [ ] `POST /api/v1/users`.
 - [ ] `GET /api/v1/wallets/:walletId`.
 - [ ] `POST /api/v1/wallets/:walletId/fund`.

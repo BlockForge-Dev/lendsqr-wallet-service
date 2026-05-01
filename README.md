@@ -4,7 +4,9 @@ This project implements a wallet MVP for Demo Credit, a lending application. The
 
 ## Status
 
-Current milestone: Milestone 0 - Assessment Deconstruction.
+Current milestone: Milestone 1 - Project Initialization complete.
+
+Next milestone: Milestone 2 - Database and Knex Setup.
 
 ## Problem Statement
 
@@ -21,24 +23,24 @@ Demo Credit needs a backend wallet service that allows eligible users to receive
 
 ## Assessment Requirement Mapping
 
-| Requirement | Planned implementation | Status |
-| --- | --- | --- |
-| Node.js backend | Express API on Node.js LTS | Planned |
-| TypeScript | Strict TypeScript project setup | Planned |
-| KnexJS ORM/query builder | Knex migrations and repositories | Planned |
-| MySQL persistence | MySQL database with transaction support | Planned |
-| User account creation | `POST /api/v1/users` | Planned |
-| Wallet creation | One wallet created during onboarding | Planned |
-| Wallet funding | `POST /api/v1/wallets/:walletId/fund` | Planned |
-| Wallet withdrawal | `POST /api/v1/wallets/:walletId/withdraw` | Planned |
-| Wallet transfer | `POST /api/v1/wallets/:walletId/transfers` | Planned |
-| Karma blacklist check | Adjutor client isolated behind service | Planned |
-| Faux authentication | `x-user-id` request header middleware | Planned |
-| Unit/integration tests | Jest and Supertest coverage | Planned |
+| Requirement                     | Planned implementation                        | Status  |
+| ------------------------------- | --------------------------------------------- | ------- |
+| Node.js backend                 | Express API on Node.js LTS                    | Planned |
+| TypeScript                      | Strict TypeScript project setup               | Planned |
+| KnexJS ORM/query builder        | Knex migrations and repositories              | Planned |
+| MySQL persistence               | MySQL database with transaction support       | Planned |
+| User account creation           | `POST /api/v1/users`                          | Planned |
+| Wallet creation                 | One wallet created during onboarding          | Planned |
+| Wallet funding                  | `POST /api/v1/wallets/:walletId/fund`         | Planned |
+| Wallet withdrawal               | `POST /api/v1/wallets/:walletId/withdraw`     | Planned |
+| Wallet transfer                 | `POST /api/v1/wallets/:walletId/transfers`    | Planned |
+| Karma blacklist check           | Adjutor client isolated behind service        | Planned |
+| Faux authentication             | `x-user-id` request header middleware         | Planned |
+| Unit/integration tests          | Jest and Supertest coverage                   | Planned |
 | Positive and negative scenarios | Success, validation, auth, and rollback tests | Planned |
-| Public deployment | Cloud-hosted API URL | Planned |
-| Public documentation page | Google Doc or Notion page | Planned |
-| Loom review video | Under 3 minutes with requirement mapping | Planned |
+| Public deployment               | Cloud-hosted API URL                          | Planned |
+| Public documentation page       | Google Doc or Notion page                     | Planned |
+| Loom review video               | Under 3 minutes with requirement mapping      | Planned |
 
 ## Architecture Overview
 
@@ -104,20 +106,27 @@ The MVP will fail closed if blacklist verification cannot be completed. This is 
 
 ## Local Setup
 
-Setup instructions will be completed as the implementation milestones are delivered.
-
-Expected commands:
+Install dependencies and run the API locally:
 
 ```bash
 npm install
 npm run dev
+```
+
+Run build, tests, linting, and formatting checks:
+
+```bash
 npm run build
 npm test
+npm run lint
+npm run format:check
 ```
+
+The development server listens on `PORT` from the environment and defaults to `3000`.
 
 ## Environment Variables
 
-The `.env.example` file will be added during project initialization.
+Copy `.env.example` to `.env` for local development and fill in environment-specific values.
 
 Planned variables:
 

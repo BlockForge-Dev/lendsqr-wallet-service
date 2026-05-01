@@ -15,14 +15,14 @@ This file tracks the assessment roadmap from planning through submission.
 
 ## Milestone 1: Project Initialization
 
-- [ ] Initialize npm project.
-- [ ] Install TypeScript, Express, Knex, MySQL driver, dotenv, Jest, and Supertest.
-- [ ] Configure `tsconfig.json`.
-- [ ] Configure test runner.
-- [ ] Add `src/app.ts` and `src/server.ts`.
-- [ ] Add health endpoint.
-- [ ] Add `.env.example`.
-- [ ] Verify `npm run dev`, `npm run build`, and `npm test`.
+- [x] Initialize npm project.
+- [x] Install TypeScript, Express, Knex, MySQL driver, dotenv, Jest, and Supertest.
+- [x] Configure `tsconfig.json`.
+- [x] Configure test runner.
+- [x] Add `src/app.ts` and `src/server.ts`.
+- [x] Add health endpoint.
+- [x] Add `.env.example`.
+- [x] Verify `npm run dev`, `npm run build`, and `npm test`.
 
 ## Milestone 2: Database and Knex Setup
 
