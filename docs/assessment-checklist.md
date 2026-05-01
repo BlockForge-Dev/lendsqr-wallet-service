@@ -18,47 +18,47 @@ This checklist converts the Lendsqr Backend Engineer Assessment into acceptance 
 - [x] Karma blacklist is checked before onboarding.
 - [x] Blacklisted users are rejected before user or wallet persistence.
 - [x] User gets exactly one wallet after successful onboarding.
-- [ ] User can fund wallet.
+- [x] User can fund wallet.
 - [ ] User can transfer funds to another wallet.
 - [ ] User can withdraw funds.
 - [ ] User can view wallet transaction history.
 - [x] Faux authentication is implemented with `x-user-id`.
-- [ ] User cannot operate on another user's wallet.
+- [x] User cannot operate on another user's wallet.
 
 ## Financial Correctness Requirements
 
-- [ ] Money is stored in minor units.
-- [ ] Floating-point arithmetic is avoided for wallet balances.
-- [ ] Wallet balance cannot become negative.
+- [x] Money is stored in minor units.
+- [x] Floating-point arithmetic is avoided for wallet balances.
+- [x] Wallet balance cannot become negative.
 - [ ] Every balance change creates a durable transaction record.
-- [ ] Transaction references are unique.
-- [ ] Funding operation is atomic.
+- [x] Transaction references are unique.
+- [x] Funding operation is atomic.
 - [ ] Withdrawal operation is atomic.
 - [ ] Transfer operation is atomic.
 - [ ] Failed transfer does not debit sender.
 - [ ] Failed transfer does not credit recipient.
-- [ ] Wallet rows are locked during mutations.
+- [x] Wallet rows are locked during mutations.
 - [ ] Transfer locks are acquired in deterministic order.
 
 ## Database Requirements
 
-- [ ] `users` table exists.
-- [ ] `wallets` table exists.
-- [ ] `transactions` table exists.
-- [ ] `blacklist_checks` table exists.
-- [ ] `users.email` is unique.
-- [ ] `users.phone` is unique.
-- [ ] `wallets.user_id` is unique.
-- [ ] `wallets.balance_minor` is non-negative.
-- [ ] `transactions.reference` is unique.
-- [ ] `transactions.related_transaction_id` supports transfer linking.
+- [x] `users` table exists.
+- [x] `wallets` table exists.
+- [x] `transactions` table exists.
+- [x] `blacklist_checks` table exists.
+- [x] `users.email` is unique.
+- [x] `users.phone` is unique.
+- [x] `wallets.user_id` is unique.
+- [x] `wallets.balance_minor` is non-negative.
+- [x] `transactions.reference` is unique.
+- [x] `transactions.related_transaction_id` supports transfer linking.
 
 ## API Requirements
 
 - [x] `GET /health`.
 - [x] `POST /api/v1/users`.
 - [ ] `GET /api/v1/wallets/:walletId`.
-- [ ] `POST /api/v1/wallets/:walletId/fund`.
+- [x] `POST /api/v1/wallets/:walletId/fund`.
 - [ ] `POST /api/v1/wallets/:walletId/withdraw`.
 - [ ] `POST /api/v1/wallets/:walletId/transfers`.
 - [ ] `GET /api/v1/wallets/:walletId/transactions`.
@@ -66,7 +66,7 @@ This checklist converts the Lendsqr Backend Engineer Assessment into acceptance 
 - [x] Consistent error responses.
 - [x] Validation errors return `400`.
 - [x] Missing faux auth returns `401`.
-- [ ] Cross-wallet access returns `403`.
+- [x] Cross-wallet access returns `403`.
 - [x] Missing resources return `404`.
 
 ## Testing Requirements
@@ -76,8 +76,8 @@ This checklist converts the Lendsqr Backend Engineer Assessment into acceptance 
 - [x] Blacklisted user rejection test.
 - [x] Duplicate email rejection test.
 - [x] Duplicate phone rejection test.
-- [ ] Funding success test.
-- [ ] Funding invalid amount tests.
+- [x] Funding success test.
+- [x] Funding invalid amount tests.
 - [ ] Withdrawal success test.
 - [ ] Withdrawal insufficient funds test.
 - [ ] Withdrawal invalid amount tests.
@@ -86,7 +86,7 @@ This checklist converts the Lendsqr Backend Engineer Assessment into acceptance 
 - [ ] Transfer insufficient funds test.
 - [ ] Transfer missing recipient test.
 - [ ] Transfer same-wallet rejection test.
-- [ ] Unauthorized wallet access tests.
+- [x] Unauthorized wallet access tests.
 - [x] External Adjutor API mocked in tests.
 - [ ] Test database setup documented.
 

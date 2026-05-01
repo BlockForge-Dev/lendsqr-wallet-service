@@ -45,6 +45,33 @@ export class WalletRepository {
 
     return toRecord(row);
   }
+
+  async findByIdForUpdate(
+    walletId: string,
+    trx: DatabaseTransaction,
+  ): Promise<WalletRecord | null> {
+    const row = await trx<WalletRow>('wallets').where({ id: walletId }).forUpdate().first();
+
+    return row ? toRecord(row) : null;
+  }
+
+  async updateBalance(
+    walletId: string,
+    balanceMinor: number,
+    trx: DatabaseTransaction,
+  ): Promise<WalletRecord> {
+    await trx<WalletRow>('wallets').where({ id: walletId }).update({
+      balance_minor: balanceMinor,
+    });
+
+    const row = await trx<WalletRow>('wallets').where({ id: walletId }).first();
+
+    if (!row) {
+      throw new Error('Wallet record was not found after balance update');
+    }
+
+    return toRecord(row);
+  }
 }
 
 export const walletRepository = new WalletRepository();

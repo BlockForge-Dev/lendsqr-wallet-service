@@ -69,14 +69,14 @@ Note: Knex CLI loading was verified, but local migration execution is pending be
 
 ## Milestone 6: Wallet Funding
 
-- [ ] Add fund validation.
-- [ ] Enforce faux auth.
-- [ ] Enforce wallet ownership.
-- [ ] Validate positive amount.
-- [ ] Lock wallet row during mutation.
-- [ ] Update balance atomically.
-- [ ] Create `FUND` transaction record.
-- [ ] Add funding tests.
+- [x] Add fund validation.
+- [x] Enforce faux auth.
+- [x] Enforce wallet ownership.
+- [x] Validate positive amount.
+- [x] Lock wallet row during mutation.
+- [x] Update balance atomically.
+- [x] Create `FUND` transaction record.
+- [x] Add funding tests.
 
 ## Milestone 7: Wallet Withdrawal
 

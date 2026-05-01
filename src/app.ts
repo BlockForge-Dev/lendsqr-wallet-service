@@ -3,6 +3,7 @@ import express, { type Request, type Response } from 'express';
 import { errorHandler } from './middlewares/error-handler';
 import { notFound } from './middlewares/not-found';
 import { createUserRouter } from './modules/users/user.routes';
+import { createWalletRouter } from './modules/wallets/wallet.routes';
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.get('/health', (_req: Request, res: Response) => {
 });
 
 app.use('/api/v1/users', createUserRouter());
+app.use('/api/v1/wallets', createWalletRouter());
 
 app.use(notFound);
 app.use(errorHandler);

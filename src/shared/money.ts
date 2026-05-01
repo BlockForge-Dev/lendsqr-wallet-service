@@ -8,17 +8,17 @@ export const isValidMinorUnitAmount = (amount: unknown): amount is number => {
   );
 };
 
-export const assertPositiveMinorUnitAmount = (
+export function assertPositiveMinorUnitAmount(
   amount: unknown,
   fieldName = 'amount',
-): asserts amount is number => {
+): asserts amount is number {
   if (!isValidMinorUnitAmount(amount)) {
     throw AppError.badRequest(
       `${fieldName} must be a positive integer in minor units`,
       'INVALID_AMOUNT',
     );
   }
-};
+}
 
 export const addMinorUnits = (left: number, right: number): number => {
   const result = left + right;

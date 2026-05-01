@@ -4,9 +4,9 @@ This project implements a wallet MVP for Demo Credit, a lending application. The
 
 ## Status
 
-Current milestone: Milestone 5 - User Onboarding implemented.
+Current milestone: Milestone 6 - Wallet Funding implemented.
 
-Next milestone: Milestone 6 - Wallet Funding.
+Next milestone: Milestone 7 - Wallet Withdrawal.
 
 ## Problem Statement
 
@@ -31,7 +31,7 @@ Demo Credit needs a backend wallet service that allows eligible users to receive
 | MySQL persistence               | MySQL database with transaction support       | Implemented |
 | User account creation           | `POST /api/v1/users`                          | Implemented |
 | Wallet creation                 | One wallet created during onboarding          | Implemented |
-| Wallet funding                  | `POST /api/v1/wallets/:walletId/fund`         | Planned     |
+| Wallet funding                  | `POST /api/v1/wallets/:walletId/fund`         | Implemented |
 | Wallet withdrawal               | `POST /api/v1/wallets/:walletId/withdraw`     | Planned     |
 | Wallet transfer                 | `POST /api/v1/wallets/:walletId/transfers`    | Planned     |
 | Karma blacklist check           | Adjutor client isolated behind service        | Implemented |
@@ -87,6 +87,23 @@ Onboarding flow:
 - Attach successful blacklist check records to the created user.
 
 Successful response uses the shared success envelope and returns the created user and wallet.
+
+## Wallet Funding
+
+`POST /api/v1/wallets/:walletId/fund` simulates wallet funding because no external payment provider is required for the assessment.
+
+Funding flow:
+
+- Require faux auth through `x-user-id`.
+- Validate `walletId`, positive integer `amount`, and optional description.
+- Open a database transaction.
+- Lock the wallet row with `FOR UPDATE`.
+- Confirm the authenticated user owns the wallet.
+- Increase `balance_minor` using minor-unit integer arithmetic.
+- Create a `FUND` transaction record with before and after balances.
+- Commit the balance update and transaction record atomically.
+
+Funding returns the updated wallet and the created transaction record.
 
 ## Database Design
 
