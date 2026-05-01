@@ -91,15 +91,15 @@ Note: Knex CLI loading was verified, but local migration execution is pending be
 
 ## Milestone 8: Wallet-to-Wallet Transfer
 
-- [ ] Add transfer validation.
-- [ ] Enforce sender wallet ownership.
-- [ ] Validate recipient wallet.
-- [ ] Reject invalid amount.
-- [ ] Reject same-wallet transfer.
-- [ ] Lock wallets in deterministic order.
-- [ ] Debit sender and credit recipient atomically.
-- [ ] Create linked `TRANSFER_OUT` and `TRANSFER_IN` records.
-- [ ] Add transfer tests.
+- [x] Add transfer validation.
+- [x] Enforce sender wallet ownership.
+- [x] Validate recipient wallet.
+- [x] Reject invalid amount.
+- [x] Reject same-wallet transfer.
+- [x] Lock wallets in deterministic order.
+- [x] Debit sender and credit recipient atomically.
+- [x] Create linked `TRANSFER_OUT` and `TRANSFER_IN` records.
+- [x] Add transfer tests.
 
 ## Milestone 9: Transaction History
 

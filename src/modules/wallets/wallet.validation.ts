@@ -23,3 +23,10 @@ export const withdrawWalletSchema = {
   params: walletIdParamsSchema,
   body: walletMutationBodySchema,
 };
+
+export const transferWalletSchema = {
+  params: walletIdParamsSchema,
+  body: walletMutationBodySchema.extend({
+    recipientWalletId: z.string().trim().min(1),
+  }),
+};

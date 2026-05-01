@@ -4,9 +4,9 @@ This project implements a wallet MVP for Demo Credit, a lending application. The
 
 ## Status
 
-Current milestone: Milestone 7 - Wallet Withdrawal implemented.
+Current milestone: Milestone 8 - Wallet-to-Wallet Transfer implemented.
 
-Next milestone: Milestone 8 - Wallet-to-Wallet Transfer.
+Next milestone: Milestone 9 - Transaction History.
 
 ## Problem Statement
 
@@ -33,7 +33,7 @@ Demo Credit needs a backend wallet service that allows eligible users to receive
 | Wallet creation                 | One wallet created during onboarding          | Implemented |
 | Wallet funding                  | `POST /api/v1/wallets/:walletId/fund`         | Implemented |
 | Wallet withdrawal               | `POST /api/v1/wallets/:walletId/withdraw`     | Implemented |
-| Wallet transfer                 | `POST /api/v1/wallets/:walletId/transfers`    | Planned     |
+| Wallet transfer                 | `POST /api/v1/wallets/:walletId/transfers`    | Implemented |
 | Karma blacklist check           | Adjutor client isolated behind service        | Implemented |
 | Faux authentication             | `x-user-id` request header middleware         | Implemented |
 | Unit/integration tests          | Jest and Supertest coverage                   | In progress |
@@ -122,6 +122,25 @@ Withdrawal flow:
 - Commit the balance update and transaction record atomically.
 
 Insufficient funds are rejected before any balance update or transaction record is created.
+
+## Wallet Transfer
+
+`POST /api/v1/wallets/:walletId/transfers` moves funds from the authenticated sender wallet to another wallet.
+
+Transfer flow:
+
+- Require faux auth through `x-user-id`.
+- Validate sender wallet ID, recipient wallet ID, positive integer `amount`, and optional description.
+- Reject same-wallet transfers.
+- Open a database transaction.
+- Lock sender and recipient wallet rows in deterministic wallet ID order to reduce deadlock risk.
+- Confirm the authenticated user owns the sender wallet.
+- Confirm the recipient wallet exists.
+- Check that the sender has sufficient funds.
+- Debit the sender and credit the recipient inside the same transaction.
+- Create linked `TRANSFER_OUT` and `TRANSFER_IN` transaction records with before and after balances.
+
+If any part of the transfer fails, the database transaction rolls back so the sender is not debited and the recipient is not credited.
 
 ## Database Design
 

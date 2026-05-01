@@ -33,4 +33,9 @@ export type TransactionRecord = {
 
 export type TransactionStore = {
   create(input: CreateTransactionInput, trx?: DatabaseTransaction): Promise<TransactionRecord>;
+  updateRelatedTransaction?(
+    transactionId: string,
+    relatedTransactionId: string,
+    trx?: DatabaseTransaction,
+  ): Promise<TransactionRecord>;
 };

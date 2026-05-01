@@ -67,6 +67,26 @@ export class TransactionRepository {
 
     return toRecord(row);
   }
+
+  async updateRelatedTransaction(
+    transactionId: string,
+    relatedTransactionId: string,
+    trx?: DatabaseTransaction,
+  ): Promise<TransactionRecord> {
+    const query = trx ?? this.knex;
+
+    await query<TransactionRow>('transactions').where({ id: transactionId }).update({
+      related_transaction_id: relatedTransactionId,
+    });
+
+    const row = await query<TransactionRow>('transactions').where({ id: transactionId }).first();
+
+    if (!row) {
+      throw new Error('Transaction record was not found after linking related transaction');
+    }
+
+    return toRecord(row);
+  }
 }
 
 export const transactionRepository = new TransactionRepository();

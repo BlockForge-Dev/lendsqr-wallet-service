@@ -19,7 +19,7 @@ This checklist converts the Lendsqr Backend Engineer Assessment into acceptance 
 - [x] Blacklisted users are rejected before user or wallet persistence.
 - [x] User gets exactly one wallet after successful onboarding.
 - [x] User can fund wallet.
-- [ ] User can transfer funds to another wallet.
+- [x] User can transfer funds to another wallet.
 - [x] User can withdraw funds.
 - [ ] User can view wallet transaction history.
 - [x] Faux authentication is implemented with `x-user-id`.
@@ -30,15 +30,15 @@ This checklist converts the Lendsqr Backend Engineer Assessment into acceptance 
 - [x] Money is stored in minor units.
 - [x] Floating-point arithmetic is avoided for wallet balances.
 - [x] Wallet balance cannot become negative.
-- [ ] Every balance change creates a durable transaction record.
+- [x] Every balance change creates a durable transaction record.
 - [x] Transaction references are unique.
 - [x] Funding operation is atomic.
 - [x] Withdrawal operation is atomic.
-- [ ] Transfer operation is atomic.
-- [ ] Failed transfer does not debit sender.
-- [ ] Failed transfer does not credit recipient.
+- [x] Transfer operation is atomic.
+- [x] Failed transfer does not debit sender.
+- [x] Failed transfer does not credit recipient.
 - [x] Wallet rows are locked during mutations.
-- [ ] Transfer locks are acquired in deterministic order.
+- [x] Transfer locks are acquired in deterministic order.
 
 ## Database Requirements
 
@@ -60,7 +60,7 @@ This checklist converts the Lendsqr Backend Engineer Assessment into acceptance 
 - [ ] `GET /api/v1/wallets/:walletId`.
 - [x] `POST /api/v1/wallets/:walletId/fund`.
 - [x] `POST /api/v1/wallets/:walletId/withdraw`.
-- [ ] `POST /api/v1/wallets/:walletId/transfers`.
+- [x] `POST /api/v1/wallets/:walletId/transfers`.
 - [ ] `GET /api/v1/wallets/:walletId/transactions`.
 - [x] Consistent success responses.
 - [x] Consistent error responses.
@@ -81,11 +81,11 @@ This checklist converts the Lendsqr Backend Engineer Assessment into acceptance 
 - [x] Withdrawal success test.
 - [x] Withdrawal insufficient funds test.
 - [x] Withdrawal invalid amount tests.
-- [ ] Transfer success test.
-- [ ] Transfer transaction record test.
-- [ ] Transfer insufficient funds test.
-- [ ] Transfer missing recipient test.
-- [ ] Transfer same-wallet rejection test.
+- [x] Transfer success test.
+- [x] Transfer transaction record test.
+- [x] Transfer insufficient funds test.
+- [x] Transfer missing recipient test.
+- [x] Transfer same-wallet rejection test.
 - [x] Unauthorized wallet access tests.
 - [x] External Adjutor API mocked in tests.
 - [ ] Test database setup documented.

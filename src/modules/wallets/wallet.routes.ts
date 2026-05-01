@@ -3,7 +3,7 @@ import { Router } from 'express';
 import { fauxAuth } from '../../middlewares/faux-auth';
 import { validateRequest } from '../../middlewares/validate-request';
 import { WalletController, walletController } from './wallet.controller';
-import { fundWalletSchema, withdrawWalletSchema } from './wallet.validation';
+import { fundWalletSchema, transferWalletSchema, withdrawWalletSchema } from './wallet.validation';
 
 export const createWalletRouter = (controller: WalletController = walletController): Router => {
   const router = Router();
@@ -19,6 +19,12 @@ export const createWalletRouter = (controller: WalletController = walletControll
     fauxAuth,
     validateRequest(withdrawWalletSchema),
     controller.withdrawWallet,
+  );
+  router.post(
+    '/:walletId/transfers',
+    fauxAuth,
+    validateRequest(transferWalletSchema),
+    controller.transferWallet,
   );
 
   return router;
