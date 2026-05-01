@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import type { Knex } from 'knex';
 
 import { db } from '../../database/knex';
+import type { DatabaseTransaction } from '../../database/transaction';
 import {
   ADJUTOR_KARMA_PROVIDER,
   type BlacklistCheckRecord,
@@ -56,6 +57,18 @@ export class BlacklistRepository {
     }
 
     return toRecord(row);
+  }
+
+  async attachToUser(checkIds: string[], userId: string, trx?: DatabaseTransaction): Promise<void> {
+    if (checkIds.length === 0) {
+      return;
+    }
+
+    const query = trx ?? this.knex;
+
+    await query<BlacklistCheckRow>('blacklist_checks').whereIn('id', checkIds).update({
+      user_id: userId,
+    });
   }
 }
 

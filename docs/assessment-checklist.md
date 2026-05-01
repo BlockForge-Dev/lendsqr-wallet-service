@@ -14,15 +14,15 @@ This checklist converts the Lendsqr Backend Engineer Assessment into acceptance 
 
 ## Product Requirements
 
-- [ ] User can create an account.
-- [ ] Karma blacklist is checked before onboarding.
-- [ ] Blacklisted users are rejected before user or wallet persistence.
-- [ ] User gets exactly one wallet after successful onboarding.
+- [x] User can create an account.
+- [x] Karma blacklist is checked before onboarding.
+- [x] Blacklisted users are rejected before user or wallet persistence.
+- [x] User gets exactly one wallet after successful onboarding.
 - [ ] User can fund wallet.
 - [ ] User can transfer funds to another wallet.
 - [ ] User can withdraw funds.
 - [ ] User can view wallet transaction history.
-- [ ] Faux authentication is implemented with `x-user-id`.
+- [x] Faux authentication is implemented with `x-user-id`.
 - [ ] User cannot operate on another user's wallet.
 
 ## Financial Correctness Requirements
@@ -56,7 +56,7 @@ This checklist converts the Lendsqr Backend Engineer Assessment into acceptance 
 ## API Requirements
 
 - [x] `GET /health`.
-- [ ] `POST /api/v1/users`.
+- [x] `POST /api/v1/users`.
 - [ ] `GET /api/v1/wallets/:walletId`.
 - [ ] `POST /api/v1/wallets/:walletId/fund`.
 - [ ] `POST /api/v1/wallets/:walletId/withdraw`.
@@ -71,11 +71,11 @@ This checklist converts the Lendsqr Backend Engineer Assessment into acceptance 
 
 ## Testing Requirements
 
-- [ ] User onboarding success test.
-- [ ] Wallet creation after onboarding test.
-- [ ] Blacklisted user rejection test.
-- [ ] Duplicate email rejection test.
-- [ ] Duplicate phone rejection test.
+- [x] User onboarding success test.
+- [x] Wallet creation after onboarding test.
+- [x] Blacklisted user rejection test.
+- [x] Duplicate email rejection test.
+- [x] Duplicate phone rejection test.
 - [ ] Funding success test.
 - [ ] Funding invalid amount tests.
 - [ ] Withdrawal success test.

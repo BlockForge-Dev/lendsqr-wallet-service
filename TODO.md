@@ -57,15 +57,15 @@ Note: Knex CLI loading was verified, but local migration execution is pending be
 
 ## Milestone 5: User Onboarding
 
-- [ ] Add user validation schema.
-- [ ] Add user repository.
-- [ ] Add user service.
-- [ ] Add user controller and route.
-- [ ] Reject duplicate email.
-- [ ] Reject duplicate phone.
-- [ ] Check Karma before persistence.
-- [ ] Create user and wallet in one database transaction.
-- [ ] Add onboarding tests.
+- [x] Add user validation schema.
+- [x] Add user repository.
+- [x] Add user service.
+- [x] Add user controller and route.
+- [x] Reject duplicate email.
+- [x] Reject duplicate phone.
+- [x] Check Karma before persistence.
+- [x] Create user and wallet in one database transaction.
+- [x] Add onboarding tests.
 
 ## Milestone 6: Wallet Funding
 

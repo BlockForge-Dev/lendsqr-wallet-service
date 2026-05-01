@@ -2,6 +2,7 @@ import express, { type Request, type Response } from 'express';
 
 import { errorHandler } from './middlewares/error-handler';
 import { notFound } from './middlewares/not-found';
+import { createUserRouter } from './modules/users/user.routes';
 
 const app = express();
 
@@ -13,6 +14,8 @@ app.get('/health', (_req: Request, res: Response) => {
     service: 'lendsqr-wallet-service',
   });
 });
+
+app.use('/api/v1/users', createUserRouter());
 
 app.use(notFound);
 app.use(errorHandler);

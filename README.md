@@ -4,9 +4,9 @@ This project implements a wallet MVP for Demo Credit, a lending application. The
 
 ## Status
 
-Current milestone: Milestone 4 - Adjutor Karma Blacklist Integration implemented.
+Current milestone: Milestone 5 - User Onboarding implemented.
 
-Next milestone: Milestone 5 - User Onboarding.
+Next milestone: Milestone 6 - Wallet Funding.
 
 ## Problem Statement
 
@@ -23,24 +23,24 @@ Demo Credit needs a backend wallet service that allows eligible users to receive
 
 ## Assessment Requirement Mapping
 
-| Requirement                     | Planned implementation                        | Status  |
-| ------------------------------- | --------------------------------------------- | ------- |
-| Node.js backend                 | Express API on Node.js LTS                    | Planned |
-| TypeScript                      | Strict TypeScript project setup               | Planned |
-| KnexJS ORM/query builder        | Knex migrations and repositories              | Planned |
-| MySQL persistence               | MySQL database with transaction support       | Planned |
-| User account creation           | `POST /api/v1/users`                          | Planned |
-| Wallet creation                 | One wallet created during onboarding          | Planned |
-| Wallet funding                  | `POST /api/v1/wallets/:walletId/fund`         | Planned |
-| Wallet withdrawal               | `POST /api/v1/wallets/:walletId/withdraw`     | Planned |
-| Wallet transfer                 | `POST /api/v1/wallets/:walletId/transfers`    | Planned |
-| Karma blacklist check           | Adjutor client isolated behind service        | Planned |
-| Faux authentication             | `x-user-id` request header middleware         | Planned |
-| Unit/integration tests          | Jest and Supertest coverage                   | Planned |
-| Positive and negative scenarios | Success, validation, auth, and rollback tests | Planned |
-| Public deployment               | Cloud-hosted API URL                          | Planned |
-| Public documentation page       | Google Doc or Notion page                     | Planned |
-| Loom review video               | Under 3 minutes with requirement mapping      | Planned |
+| Requirement                     | Planned implementation                        | Status      |
+| ------------------------------- | --------------------------------------------- | ----------- |
+| Node.js backend                 | Express API on Node.js LTS                    | Implemented |
+| TypeScript                      | Strict TypeScript project setup               | Implemented |
+| KnexJS ORM/query builder        | Knex migrations and repositories              | Implemented |
+| MySQL persistence               | MySQL database with transaction support       | Implemented |
+| User account creation           | `POST /api/v1/users`                          | Implemented |
+| Wallet creation                 | One wallet created during onboarding          | Implemented |
+| Wallet funding                  | `POST /api/v1/wallets/:walletId/fund`         | Planned     |
+| Wallet withdrawal               | `POST /api/v1/wallets/:walletId/withdraw`     | Planned     |
+| Wallet transfer                 | `POST /api/v1/wallets/:walletId/transfers`    | Planned     |
+| Karma blacklist check           | Adjutor client isolated behind service        | Implemented |
+| Faux authentication             | `x-user-id` request header middleware         | Implemented |
+| Unit/integration tests          | Jest and Supertest coverage                   | In progress |
+| Positive and negative scenarios | Success, validation, auth, and rollback tests | In progress |
+| Public deployment               | Cloud-hosted API URL                          | Planned     |
+| Public documentation page       | Google Doc or Notion page                     | Planned     |
+| Loom review video               | Under 3 minutes with requirement mapping      | Planned     |
 
 ## Architecture Overview
 
@@ -72,6 +72,21 @@ Standard error shape:
   "errorCode": "INSUFFICIENT_FUNDS"
 }
 ```
+
+## User Onboarding
+
+`POST /api/v1/users` creates a user and a zero-balance NGN wallet after validation.
+
+Onboarding flow:
+
+- Normalize and validate the request body.
+- Reject duplicate email or phone before calling Adjutor.
+- Check Karma using email, phone, and BVN when BVN is provided.
+- Reject blacklisted identities before user or wallet persistence.
+- Create the user and wallet inside one database transaction.
+- Attach successful blacklist check records to the created user.
+
+Successful response uses the shared success envelope and returns the created user and wallet.
 
 ## Database Design
 
