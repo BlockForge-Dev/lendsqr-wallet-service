@@ -103,12 +103,12 @@ Note: Knex CLI loading was verified, but local migration execution is pending be
 
 ## Milestone 9: Transaction History
 
-- [ ] Add transaction repository.
-- [ ] Add wallet transaction history endpoint.
-- [ ] Enforce wallet ownership.
-- [ ] Return newest transactions first.
-- [ ] Add pagination.
-- [ ] Add history tests.
+- [x] Add transaction repository.
+- [x] Add wallet transaction history endpoint.
+- [x] Enforce wallet ownership.
+- [x] Return newest transactions first.
+- [x] Add pagination.
+- [x] Add history tests.
 
 ## Milestone 10: Test Coverage and Negative Scenarios
 

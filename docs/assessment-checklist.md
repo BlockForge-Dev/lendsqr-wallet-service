@@ -21,7 +21,7 @@ This checklist converts the Lendsqr Backend Engineer Assessment into acceptance 
 - [x] User can fund wallet.
 - [x] User can transfer funds to another wallet.
 - [x] User can withdraw funds.
-- [ ] User can view wallet transaction history.
+- [x] User can view wallet transaction history.
 - [x] Faux authentication is implemented with `x-user-id`.
 - [x] User cannot operate on another user's wallet.
 
@@ -61,7 +61,7 @@ This checklist converts the Lendsqr Backend Engineer Assessment into acceptance 
 - [x] `POST /api/v1/wallets/:walletId/fund`.
 - [x] `POST /api/v1/wallets/:walletId/withdraw`.
 - [x] `POST /api/v1/wallets/:walletId/transfers`.
-- [ ] `GET /api/v1/wallets/:walletId/transactions`.
+- [x] `GET /api/v1/wallets/:walletId/transactions`.
 - [x] Consistent success responses.
 - [x] Consistent error responses.
 - [x] Validation errors return `400`.

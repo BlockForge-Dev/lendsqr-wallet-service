@@ -41,11 +41,21 @@ const createDependencies = (
   const dependencies: jest.Mocked<WalletFundingDependencies> = {
     wallets: {
       create: jest.fn(),
+      findById: jest.fn().mockResolvedValue(wallet),
       findByIdForUpdate: jest.fn().mockResolvedValue(wallet),
       updateBalance: jest.fn().mockResolvedValue(fundedWallet),
     },
     transactions: {
       create: jest.fn().mockResolvedValue(transaction),
+      listByWalletId: jest.fn().mockResolvedValue({
+        transactions: [],
+        pagination: {
+          page: 1,
+          limit: 20,
+          total: 0,
+          totalPages: 0,
+        },
+      }),
     },
     transactionRunner: {
       run: jest.fn(async (callback) => callback(trx)),

@@ -31,6 +31,22 @@ export type TransactionRecord = {
   createdAt: Date;
 };
 
+export type ListTransactionsInput = {
+  walletId: string;
+  page: number;
+  limit: number;
+};
+
+export type ListTransactionsResult = {
+  transactions: TransactionRecord[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+};
+
 export type TransactionStore = {
   create(input: CreateTransactionInput, trx?: DatabaseTransaction): Promise<TransactionRecord>;
   updateRelatedTransaction?(
@@ -38,4 +54,5 @@ export type TransactionStore = {
     relatedTransactionId: string,
     trx?: DatabaseTransaction,
   ): Promise<TransactionRecord>;
+  listByWalletId(input: ListTransactionsInput): Promise<ListTransactionsResult>;
 };

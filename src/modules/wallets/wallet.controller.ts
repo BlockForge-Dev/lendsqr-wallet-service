@@ -70,6 +70,27 @@ export class WalletController {
 
     return sendSuccess(res, 200, 'Wallet transfer successful', result);
   };
+
+  listWalletTransactions = async (req: Request, res: Response): Promise<Response> => {
+    if (!req.user) {
+      throw AppError.unauthorized('x-user-id header is required', 'MISSING_AUTH_HEADER');
+    }
+
+    const walletId = req.params.walletId;
+
+    if (typeof walletId !== 'string') {
+      throw AppError.badRequest('walletId route parameter is required', 'VALIDATION_ERROR');
+    }
+
+    const result = await this.service.listWalletTransactions({
+      walletId,
+      userId: req.user.id,
+      page: Number(req.query.page ?? 1),
+      limit: Number(req.query.limit ?? 20),
+    });
+
+    return sendSuccess(res, 200, 'Wallet transactions retrieved successfully', result);
+  };
 }
 
 export const walletController = new WalletController();

@@ -29,7 +29,7 @@ export const validateRequest = (schemas: RequestValidationSchemas): RequestHandl
       }
 
       if (schemas.query) {
-        req.query = schemas.query.parse(req.query) as typeof req.query;
+        Object.assign(req.query, schemas.query.parse(req.query));
       }
 
       next();

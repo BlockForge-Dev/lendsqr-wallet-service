@@ -1,5 +1,9 @@
 import type { DatabaseTransaction } from '../../database/transaction';
-import type { TransactionRecord, TransactionStore } from '../transactions/transaction.types';
+import type {
+  ListTransactionsResult,
+  TransactionRecord,
+  TransactionStore,
+} from '../transactions/transaction.types';
 
 export type CreateWalletInput = {
   userId: string;
@@ -17,6 +21,7 @@ export type WalletRecord = {
 };
 
 export type WalletStore = {
+  findById(walletId: string): Promise<WalletRecord | null>;
   create(input: CreateWalletInput, trx?: DatabaseTransaction): Promise<WalletRecord>;
 };
 
@@ -68,10 +73,21 @@ export type TransferWalletResult = {
   recipientTransaction: TransactionRecord;
 };
 
-export type WalletFundingDependencies = {
+export type ListWalletTransactionsInput = {
+  walletId: string;
+  userId: string;
+  page: number;
+  limit: number;
+};
+
+export type ListWalletTransactionsResult = ListTransactionsResult;
+
+export type WalletServiceDependencies = {
   wallets: WalletMutationStore;
   transactions: TransactionStore;
   transactionRunner: {
     run<T>(callback: (trx: DatabaseTransaction) => Promise<T>): Promise<T>;
   };
 };
+
+export type WalletFundingDependencies = WalletServiceDependencies;

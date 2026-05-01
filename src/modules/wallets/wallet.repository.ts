@@ -26,6 +26,12 @@ const toRecord = (row: WalletRow): WalletRecord => ({
 export class WalletRepository {
   constructor(private readonly knex: Knex = db) {}
 
+  async findById(walletId: string): Promise<WalletRecord | null> {
+    const row = await this.knex<WalletRow>('wallets').where({ id: walletId }).first();
+
+    return row ? toRecord(row) : null;
+  }
+
   async create(input: CreateWalletInput, trx?: DatabaseTransaction): Promise<WalletRecord> {
     const id = randomUUID();
     const query = trx ?? this.knex;

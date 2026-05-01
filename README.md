@@ -4,9 +4,9 @@ This project implements a wallet MVP for Demo Credit, a lending application. The
 
 ## Status
 
-Current milestone: Milestone 8 - Wallet-to-Wallet Transfer implemented.
+Current milestone: Milestone 9 - Transaction History implemented.
 
-Next milestone: Milestone 9 - Transaction History.
+Next milestone: Milestone 10 - Test Coverage and Negative Scenarios.
 
 ## Problem Statement
 
@@ -141,6 +141,21 @@ Transfer flow:
 - Create linked `TRANSFER_OUT` and `TRANSFER_IN` transaction records with before and after balances.
 
 If any part of the transfer fails, the database transaction rolls back so the sender is not debited and the recipient is not credited.
+
+## Transaction History
+
+`GET /api/v1/wallets/:walletId/transactions` returns a paginated audit trail for a wallet.
+
+History flow:
+
+- Require faux auth through `x-user-id`.
+- Validate `walletId`, `page`, and `limit`.
+- Confirm the wallet exists.
+- Confirm the authenticated user owns the wallet.
+- Return transactions ordered newest first.
+- Return pagination metadata with `page`, `limit`, `total`, and `totalPages`.
+
+Default pagination is `page=1` and `limit=20`. The maximum limit is `100`.
 
 ## Database Design
 

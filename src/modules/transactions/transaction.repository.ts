@@ -3,7 +3,12 @@ import type { Knex } from 'knex';
 
 import { db } from '../../database/knex';
 import type { DatabaseTransaction } from '../../database/transaction';
-import type { CreateTransactionInput, TransactionRecord } from './transaction.types';
+import type {
+  CreateTransactionInput,
+  ListTransactionsInput,
+  ListTransactionsResult,
+  TransactionRecord,
+} from './transaction.types';
 
 type TransactionRow = {
   id: string;
@@ -86,6 +91,30 @@ export class TransactionRepository {
     }
 
     return toRecord(row);
+  }
+
+  async listByWalletId(input: ListTransactionsInput): Promise<ListTransactionsResult> {
+    const offset = (input.page - 1) * input.limit;
+    const [{ total }] = await this.knex<TransactionRow>('transactions')
+      .where({ wallet_id: input.walletId })
+      .count<{ total: number | string }[]>({ total: '*' });
+    const rows = await this.knex<TransactionRow>('transactions')
+      .where({ wallet_id: input.walletId })
+      .orderBy('created_at', 'desc')
+      .orderBy('id', 'desc')
+      .limit(input.limit)
+      .offset(offset);
+    const totalCount = Number(total);
+
+    return {
+      transactions: rows.map(toRecord),
+      pagination: {
+        page: input.page,
+        limit: input.limit,
+        total: totalCount,
+        totalPages: Math.ceil(totalCount / input.limit),
+      },
+    };
   }
 }
 

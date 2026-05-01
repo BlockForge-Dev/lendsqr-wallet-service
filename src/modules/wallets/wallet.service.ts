@@ -12,6 +12,8 @@ import { walletRepository } from './wallet.repository';
 import type {
   FundWalletInput,
   FundWalletResult,
+  ListWalletTransactionsInput,
+  ListWalletTransactionsResult,
   TransferWalletInput,
   TransferWalletResult,
   WalletFundingDependencies,
@@ -237,6 +239,26 @@ export class WalletService {
         senderTransaction,
         recipientTransaction,
       };
+    });
+  }
+
+  async listWalletTransactions(
+    input: ListWalletTransactionsInput,
+  ): Promise<ListWalletTransactionsResult> {
+    const wallet = await this.dependencies.wallets.findById(input.walletId);
+
+    if (!wallet) {
+      throw AppError.notFound('Wallet not found', 'WALLET_NOT_FOUND');
+    }
+
+    if (wallet.userId !== input.userId) {
+      throw AppError.forbidden('You are not allowed to operate on this wallet', 'WALLET_FORBIDDEN');
+    }
+
+    return this.dependencies.transactions.listByWalletId({
+      walletId: input.walletId,
+      page: input.page,
+      limit: input.limit,
     });
   }
 }
