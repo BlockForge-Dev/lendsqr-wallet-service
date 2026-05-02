@@ -124,14 +124,16 @@ Note: Milestone 10 also closed the remaining wallet detail endpoint requirement 
 
 ## Milestone 11: README and Documentation
 
-- [ ] Complete README design document.
-- [ ] Add E-R diagram image.
-- [ ] Add API examples.
-- [ ] Add local setup instructions.
-- [ ] Add environment variable documentation.
-- [ ] Add testing instructions.
+- [x] Complete README design document.
+- [x] Add E-R diagram image.
+- [x] Add API examples.
+- [x] Add local setup instructions.
+- [x] Add environment variable documentation.
+- [x] Add testing instructions.
 - [ ] Add deployment URL.
-- [ ] Add tradeoffs and future improvements.
+- [x] Add tradeoffs and future improvements.
+
+Note: the README now includes the deployment section and target URL format. The actual public URL is pending Milestone 12 deployment.
 
 ## Milestone 12: Deployment
 

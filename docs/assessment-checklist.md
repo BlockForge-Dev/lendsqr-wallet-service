@@ -96,23 +96,23 @@ This checklist converts the Lendsqr Backend Engineer Assessment into acceptance 
 
 ## Documentation Requirements
 
-- [ ] README exists.
-- [ ] README includes problem statement.
-- [ ] README maps assessment requirements to implementation.
-- [ ] README explains architecture layers.
-- [ ] README explains database design.
-- [ ] README includes E-R diagram.
-- [ ] README documents API endpoints.
-- [ ] README documents faux auth.
-- [ ] README documents Karma integration.
-- [ ] README documents wallet consistency and transaction scoping.
-- [ ] README documents local setup.
-- [ ] README documents environment variables.
-- [ ] README documents migrations.
-- [ ] README documents tests.
+- [x] README exists.
+- [x] README includes problem statement.
+- [x] README maps assessment requirements to implementation.
+- [x] README explains architecture layers.
+- [x] README explains database design.
+- [x] README includes E-R diagram.
+- [x] README documents API endpoints.
+- [x] README documents faux auth.
+- [x] README documents Karma integration.
+- [x] README documents wallet consistency and transaction scoping.
+- [x] README documents local setup.
+- [x] README documents environment variables.
+- [x] README documents migrations.
+- [x] README documents tests.
 - [ ] README includes deployment URL.
-- [ ] README includes tradeoffs.
-- [ ] README includes future improvements.
+- [x] README includes tradeoffs.
+- [x] README includes future improvements.
 
 ## Submission Requirements
 

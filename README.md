@@ -4,66 +4,181 @@ This project implements a wallet MVP for Demo Credit, a lending application. The
 
 ## Status
 
-Current milestone: Milestone 10 - Test Coverage and Negative Scenarios implemented.
+Current milestone: Milestone 11 - README and Documentation implemented.
 
-Next milestone: Milestone 11 - README and Documentation.
+Next milestone: Milestone 12 - Deployment.
+
+Deployment URL: pending Milestone 12.
 
 ## Problem Statement
 
 Demo Credit needs a backend wallet service that allows eligible users to receive, hold, move, and withdraw funds. The service must prevent blacklisted users from onboarding through the Adjutor Karma blacklist check and must keep a durable audit trail for every wallet balance change.
 
-## Core Product Goals
+The guiding invariant is:
 
-- Allow user onboarding after blacklist verification.
-- Automatically create a wallet for every onboarded user.
-- Allow wallet funding, withdrawal, and wallet-to-wallet transfer.
-- Preserve transaction history for every balance-changing operation.
-- Enforce wallet ownership through faux authentication.
-- Keep wallet mutations atomic and recoverable.
+```text
+A wallet balance should never change without a durable transaction record explaining why it changed.
+```
 
 ## Assessment Requirement Mapping
 
-| Requirement                     | Planned implementation                        | Status      |
-| ------------------------------- | --------------------------------------------- | ----------- |
-| Node.js backend                 | Express API on Node.js LTS                    | Implemented |
-| TypeScript                      | Strict TypeScript project setup               | Implemented |
-| KnexJS ORM/query builder        | Knex migrations and repositories              | Implemented |
-| MySQL persistence               | MySQL database with transaction support       | Implemented |
-| User account creation           | `POST /api/v1/users`                          | Implemented |
-| Wallet creation                 | One wallet created during onboarding          | Implemented |
-| Wallet funding                  | `POST /api/v1/wallets/:walletId/fund`         | Implemented |
-| Wallet withdrawal               | `POST /api/v1/wallets/:walletId/withdraw`     | Implemented |
-| Wallet transfer                 | `POST /api/v1/wallets/:walletId/transfers`    | Implemented |
-| Karma blacklist check           | Adjutor client isolated behind service        | Implemented |
-| Faux authentication             | `x-user-id` request header middleware         | Implemented |
-| Unit/integration tests          | Jest and Supertest coverage                   | Implemented |
-| Positive and negative scenarios | Success, validation, auth, and rollback tests | Implemented |
-| Public deployment               | Cloud-hosted API URL                          | Planned     |
-| Public documentation page       | Google Doc or Notion page                     | Planned     |
-| Loom review video               | Under 3 minutes with requirement mapping      | Planned     |
+| Requirement                 | Implementation                                     | Status      |
+| --------------------------- | -------------------------------------------------- | ----------- |
+| Node.js backend             | Express API on Node.js LTS                         | Implemented |
+| TypeScript                  | Strict TypeScript project setup                    | Implemented |
+| KnexJS                      | Knex migrations and repository queries             | Implemented |
+| MySQL                       | MySQL schema, constraints, and transaction support | Implemented |
+| Create user account         | `POST /api/v1/users`                               | Implemented |
+| Wallet creation             | One wallet created during onboarding               | Implemented |
+| Fund wallet                 | `POST /api/v1/wallets/:walletId/fund`              | Implemented |
+| Withdraw funds              | `POST /api/v1/wallets/:walletId/withdraw`          | Implemented |
+| Transfer funds              | `POST /api/v1/wallets/:walletId/transfers`         | Implemented |
+| Transaction history         | `GET /api/v1/wallets/:walletId/transactions`       | Implemented |
+| Karma blacklist check       | Adjutor client isolated behind blacklist service   | Implemented |
+| Faux authentication         | `x-user-id` request header middleware              | Implemented |
+| Positive and negative tests | Jest and Supertest coverage                        | Implemented |
+| README and ER diagram       | Design document plus `docs/er-diagram.png`         | Implemented |
+| Public deployment           | Cloud-hosted API URL                               | Pending     |
+| Public documentation page   | Google Doc or Notion page                          | Pending     |
+| Loom review video           | Under 3 minutes                                    | Pending     |
 
 ## Architecture Overview
 
-The service will use a simple layered architecture:
+The codebase uses a simple layered architecture:
 
-- HTTP layer: Express routes, controllers, request validation, faux auth.
-- Application layer: Services and use cases for business rules and transaction orchestration.
-- Persistence layer: Repositories using Knex and explicit database transactions.
+- HTTP layer: Express routes, controllers, request validation, faux auth, and error handling.
+- Application layer: Services that own business rules and transaction orchestration.
+- Persistence layer: Repositories that hide Knex queries and receive transaction scopes.
 - External integration layer: Adjutor Karma API client and blacklist service.
+- Shared layer: response helpers, operational errors, money helpers, and logger.
 
-## Shared Application Infrastructure
+Important folders:
 
-The API includes shared middleware and helpers for:
+```text
+src/
+  app.ts
+  server.ts
+  config/
+  database/
+  middlewares/
+  modules/
+    blacklist/
+    transactions/
+    users/
+    wallets/
+  shared/
+  tests/
+docs/
+  api-examples.md
+  er-diagram.md
+  er-diagram.png
+```
 
-- Consistent operational errors through `AppError`.
-- Consistent JSON error responses through the global error handler.
-- Zod-backed request validation through `validateRequest`.
-- Faux authentication through the `x-user-id` request header.
-- Not-found route handling.
-- Money validation in minor units.
-- Shared success response helpers for feature endpoints.
+## Database Design
 
-Standard error shape:
+The schema is intentionally small and ledger-oriented. Wallets hold current balance, while transactions explain every balance movement.
+
+### `users`
+
+Stores onboarded customers.
+
+| Column       | Notes                  |
+| ------------ | ---------------------- |
+| `id`         | UUID primary key       |
+| `first_name` | Required               |
+| `last_name`  | Required               |
+| `email`      | Required and unique    |
+| `phone`      | Required and unique    |
+| `bvn`        | Nullable and unique    |
+| `created_at` | Timestamp              |
+| `updated_at` | Auto-updated timestamp |
+
+### `wallets`
+
+Stores current wallet balances.
+
+| Column          | Notes                                                |
+| --------------- | ---------------------------------------------------- |
+| `id`            | UUID primary key                                     |
+| `user_id`       | Foreign key to users; unique for one wallet per user |
+| `balance_minor` | Unsigned BIGINT, defaults to `0`                     |
+| `currency`      | Defaults to `NGN`                                    |
+| `created_at`    | Timestamp                                            |
+| `updated_at`    | Auto-updated timestamp                               |
+
+The table has a `balance_minor >= 0` check constraint.
+
+### `transactions`
+
+Stores the durable audit trail for wallet movements.
+
+| Column                   | Notes                                                |
+| ------------------------ | ---------------------------------------------------- |
+| `id`                     | UUID primary key                                     |
+| `reference`              | Unique transaction reference                         |
+| `wallet_id`              | Wallet affected by this transaction                  |
+| `type`                   | `FUND`, `WITHDRAW`, `TRANSFER_IN`, or `TRANSFER_OUT` |
+| `amount_minor`           | Positive unsigned BIGINT                             |
+| `balance_before_minor`   | Balance before movement                              |
+| `balance_after_minor`    | Balance after movement                               |
+| `status`                 | `SUCCESS` or `FAILED`                                |
+| `counterparty_wallet_id` | Optional wallet on the other side of a transfer      |
+| `related_transaction_id` | Optional self-reference for linked transfer legs     |
+| `description`            | Optional description                                 |
+| `created_at`             | Timestamp                                            |
+
+### `blacklist_checks`
+
+Stores evidence of Adjutor Karma checks.
+
+| Column             | Notes                         |
+| ------------------ | ----------------------------- |
+| `id`               | UUID primary key              |
+| `user_id`          | Nullable foreign key to users |
+| `identity`         | Email, phone, or BVN checked  |
+| `identity_type`    | `EMAIL`, `PHONE`, or `BVN`    |
+| `provider`         | Defaults to `ADJUTOR_KARMA`   |
+| `is_blacklisted`   | Boolean result                |
+| `response_payload` | Raw provider response payload |
+| `created_at`       | Timestamp                     |
+
+## ER Diagram
+
+![ER Diagram](docs/er-diagram.png)
+
+Diagram source is available in [docs/er-diagram.md](docs/er-diagram.md).
+
+## API Documentation
+
+Base URL for local development:
+
+```text
+http://localhost:3000
+```
+
+Full request and response examples are in [docs/api-examples.md](docs/api-examples.md).
+
+| Method | Path                                     | Auth        | Purpose                         |
+| ------ | ---------------------------------------- | ----------- | ------------------------------- |
+| `GET`  | `/health`                                | No          | Service health check            |
+| `POST` | `/api/v1/users`                          | No          | Onboard user after Karma check  |
+| `GET`  | `/api/v1/wallets/:walletId`              | `x-user-id` | Get owned wallet                |
+| `POST` | `/api/v1/wallets/:walletId/fund`         | `x-user-id` | Simulate wallet funding         |
+| `POST` | `/api/v1/wallets/:walletId/withdraw`     | `x-user-id` | Simulate wallet withdrawal      |
+| `POST` | `/api/v1/wallets/:walletId/transfers`    | `x-user-id` | Transfer to another wallet      |
+| `GET`  | `/api/v1/wallets/:walletId/transactions` | `x-user-id` | List wallet transaction history |
+
+### Standard Success Response
+
+```json
+{
+  "success": true,
+  "message": "Wallet funded successfully",
+  "data": {}
+}
+```
+
+### Standard Error Response
 
 ```json
 {
@@ -73,238 +188,152 @@ Standard error shape:
 }
 ```
 
-## User Onboarding
+Validation errors also include a `details` array.
 
-`POST /api/v1/users` creates a user and a zero-balance NGN wallet after validation.
+## Authentication Approach
 
-Onboarding flow:
+Full authentication is out of scope for the assessment. The MVP uses faux authentication through an `x-user-id` request header. Wallet endpoints compare the authenticated user ID from the header against the wallet owner before returning or mutating wallet data.
 
-- Normalize and validate the request body.
-- Reject duplicate email or phone before calling Adjutor.
-- Check Karma using email, phone, and BVN when BVN is provided.
-- Reject blacklisted identities before user or wallet persistence.
-- Create the user and wallet inside one database transaction.
-- Attach successful blacklist check records to the created user.
+Missing auth returns `401`. Cross-wallet access returns `403`.
 
-Successful response uses the shared success envelope and returns the created user and wallet.
+## Karma Blacklist Integration
 
-## Wallet Detail
+User onboarding checks Adjutor Karma before creating a user or wallet.
 
-`GET /api/v1/wallets/:walletId` returns the authenticated user's wallet.
+Implementation details:
 
-Wallet detail flow:
+- `AdjutorClient` calls `GET /verification/karma/:identity`.
+- The API key is passed as `Authorization: Bearer <ADJUTOR_API_KEY>`.
+- `BlacklistService` persists successful lookup evidence in `blacklist_checks`.
+- Email and phone are always checked.
+- BVN is checked when provided.
+- A Karma response with data is treated as blacklisted.
+- A provider `404` is treated as a completed lookup with no blacklist match.
+- Missing API key, network failure, and non-404 provider errors fail closed with `BLACKLIST_PROVIDER_UNAVAILABLE`.
 
-- Require faux auth through `x-user-id`.
-- Validate the `walletId` route parameter.
-- Confirm the wallet exists.
-- Confirm the authenticated user owns the wallet.
-- Return the wallet without opening a balance mutation transaction.
+Failing closed is intentional for a lending product: if blacklist verification cannot be completed, the user is not onboarded.
 
-## Wallet Funding
+## Wallet Consistency and Transaction Scoping
 
-`POST /api/v1/wallets/:walletId/fund` simulates wallet funding because no external payment provider is required for the assessment.
+Wallet balance mutations are implemented as financial state transitions.
 
-Funding flow:
+- Amounts are stored in minor units, not floating-point values.
+- Funding, withdrawal, and transfer run inside database transactions.
+- Wallet rows are locked with `FOR UPDATE` before mutation.
+- Funding creates a `FUND` transaction.
+- Withdrawal creates a `WITHDRAW` transaction.
+- Transfer creates linked `TRANSFER_OUT` and `TRANSFER_IN` records.
+- Transfers lock wallets in deterministic wallet ID order to reduce deadlock risk.
+- If any step in a transfer fails, the database transaction rolls back.
 
-- Require faux auth through `x-user-id`.
-- Validate `walletId`, positive integer `amount`, and optional description.
-- Open a database transaction.
-- Lock the wallet row with `FOR UPDATE`.
-- Confirm the authenticated user owns the wallet.
-- Increase `balance_minor` using minor-unit integer arithmetic.
-- Create a `FUND` transaction record with before and after balances.
-- Commit the balance update and transaction record atomically.
+Core invariants:
 
-Funding returns the updated wallet and the created transaction record.
+- A blacklisted user must never be onboarded.
+- A user must not be created without a wallet.
+- A wallet balance must never be negative.
+- Every balance change must create a transaction record.
+- Transfers must be atomic.
+- A failed transfer must not debit the sender.
+- A failed transfer must not credit the recipient.
+- A user must not operate on another user's wallet.
+- Amounts must be positive integer minor units.
+- Transaction references must be unique.
 
-## Wallet Withdrawal
+## Local Setup
 
-`POST /api/v1/wallets/:walletId/withdraw` simulates withdrawal because no bank payout provider is required for the assessment.
+Requirements:
 
-Withdrawal flow:
+- Node.js `>=20.18.0`
+- MySQL `8.x` or compatible
+- npm
 
-- Require faux auth through `x-user-id`.
-- Validate `walletId`, positive integer `amount`, and optional description.
-- Open a database transaction.
-- Lock the wallet row with `FOR UPDATE`.
-- Confirm the authenticated user owns the wallet.
-- Check that the wallet has sufficient funds.
-- Decrease `balance_minor` using minor-unit integer arithmetic.
-- Create a `WITHDRAW` transaction record with before and after balances.
-- Commit the balance update and transaction record atomically.
+Install dependencies:
 
-Insufficient funds are rejected before any balance update or transaction record is created.
+```bash
+npm install
+```
 
-## Wallet Transfer
-
-`POST /api/v1/wallets/:walletId/transfers` moves funds from the authenticated sender wallet to another wallet.
-
-Transfer flow:
-
-- Require faux auth through `x-user-id`.
-- Validate sender wallet ID, recipient wallet ID, positive integer `amount`, and optional description.
-- Reject same-wallet transfers.
-- Open a database transaction.
-- Lock sender and recipient wallet rows in deterministic wallet ID order to reduce deadlock risk.
-- Confirm the authenticated user owns the sender wallet.
-- Confirm the recipient wallet exists.
-- Check that the sender has sufficient funds.
-- Debit the sender and credit the recipient inside the same transaction.
-- Create linked `TRANSFER_OUT` and `TRANSFER_IN` transaction records with before and after balances.
-
-If any part of the transfer fails, the database transaction rolls back so the sender is not debited and the recipient is not credited.
-
-## Transaction History
-
-`GET /api/v1/wallets/:walletId/transactions` returns a paginated audit trail for a wallet.
-
-History flow:
-
-- Require faux auth through `x-user-id`.
-- Validate `walletId`, `page`, and `limit`.
-- Confirm the wallet exists.
-- Confirm the authenticated user owns the wallet.
-- Return transactions ordered newest first.
-- Return pagination metadata with `page`, `limit`, `total`, and `totalPages`.
-
-Default pagination is `page=1` and `limit=20`. The maximum limit is `100`.
-
-## Database Design
-
-Planned tables:
-
-- `users`: onboarded customers.
-- `wallets`: current wallet balances in minor units.
-- `transactions`: immutable wallet movement records.
-- `blacklist_checks`: audit evidence for Karma onboarding checks. The `user_id` column is nullable so rejected or failed onboarding checks can still be recorded before a user exists.
-
-The database will enforce key invariants such as unique user identity fields, one wallet per user, non-negative wallet balances, and unique transaction references.
-
-## Running Migrations
-
-Create the local databases first:
+Create local databases:
 
 ```sql
 CREATE DATABASE lendsqr_wallet_service;
 CREATE DATABASE lendsqr_wallet_service_test;
 ```
 
-Then configure `.env` and run:
+Copy the environment template:
+
+```bash
+cp .env.example .env
+```
+
+On PowerShell, use:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+Fill in the database and Adjutor values in `.env`, then run migrations:
 
 ```bash
 npm run migrate:latest
 npm run migrate:status
-npm run migrate:rollback
 ```
 
-The Knex CLI uses `knexfile.ts` and the migrations in `src/database/migrations`.
-
-## E-R Diagram
-
-The E-R diagram will be added in `docs/er-diagram.png` during the documentation milestone.
-
-Planned relationships:
-
-- `users` 1 to 1 `wallets`
-- `wallets` 1 to many `transactions`
-- `transactions` optional self-reference through `related_transaction_id`
-- `users` 1 to many `blacklist_checks`
-
-## API Overview
-
-Planned endpoints:
-
-- `GET /health`
-- `POST /api/v1/users`
-- `GET /api/v1/wallets/:walletId`
-- `POST /api/v1/wallets/:walletId/fund`
-- `POST /api/v1/wallets/:walletId/withdraw`
-- `POST /api/v1/wallets/:walletId/transfers`
-- `GET /api/v1/wallets/:walletId/transactions`
-
-## Authentication Approach
-
-Full authentication is out of scope for the assessment. The MVP will use faux authentication through an `x-user-id` request header. Wallet endpoints will only allow users to operate on wallets they own.
-
-## Karma Blacklist Integration
-
-The Adjutor Karma integration is isolated behind a client/service boundary so it can be mocked during tests. User onboarding will call this service before any user or wallet record is created.
-
-Implementation details:
-
-- `AdjutorClient` calls `GET /verification/karma/:identity`.
-- Adjutor authentication uses `Authorization: Bearer <ADJUTOR_API_KEY>`.
-- `BlacklistService` persists successful lookup evidence in `blacklist_checks`.
-- A Karma response with data is treated as blacklisted.
-- A provider `404` is treated as a completed lookup with no blacklist match.
-- Missing API key, network failure, and non-404 provider errors fail closed with `BLACKLIST_PROVIDER_UNAVAILABLE`.
-
-The MVP will fail closed if blacklist verification cannot be completed. This is safer for a lending product because users with unknown blacklist status should not be onboarded.
-
-## Wallet Consistency Rules
-
-- A wallet balance must never change without a transaction record.
-- Amounts are stored in minor units to avoid floating-point money errors.
-- Funding, withdrawal, and transfer operations must run inside database transactions.
-- Transfers must debit and credit wallets atomically.
-- Wallet rows will be locked during balance mutation.
-- Wallet balances must never become negative.
-
-## Local Setup
-
-Install dependencies and run the API locally:
+Start the development server:
 
 ```bash
-npm install
 npm run dev
 ```
 
-Run build, tests, linting, and formatting checks:
-
-```bash
-npm run build
-npm test
-npm run lint
-npm run format:check
-```
-
-The development server listens on `PORT` from the environment and defaults to `3000`.
+The server listens on `PORT` and defaults to `3000`.
 
 ## Environment Variables
 
-Copy `.env.example` to `.env` for local development and fill in environment-specific values.
+| Variable            | Required                       | Description                          |
+| ------------------- | ------------------------------ | ------------------------------------ |
+| `NODE_ENV`          | Yes                            | Runtime environment                  |
+| `PORT`              | No                             | HTTP server port, defaults to `3000` |
+| `DATABASE_HOST`     | Yes                            | MySQL host                           |
+| `DATABASE_PORT`     | Yes                            | MySQL port                           |
+| `DATABASE_USER`     | Yes                            | MySQL user                           |
+| `DATABASE_PASSWORD` | No                             | MySQL password                       |
+| `DATABASE_NAME`     | Yes                            | Database name                        |
+| `ADJUTOR_BASE_URL`  | Yes                            | Adjutor API base URL                 |
+| `ADJUTOR_API_KEY`   | Yes for real onboarding checks | Adjutor API key                      |
 
-Planned variables:
+See [.env.example](.env.example).
+
+## Migrations
+
+Run latest migrations:
 
 ```bash
-NODE_ENV=development
-PORT=3000
-DATABASE_HOST=localhost
-DATABASE_PORT=3306
-DATABASE_USER=root
-DATABASE_PASSWORD=
-DATABASE_NAME=lendsqr_wallet_service
-ADJUTOR_BASE_URL=https://adjutor.lendsqr.com/v2
-ADJUTOR_API_KEY=
+npm run migrate:latest
 ```
 
-## Testing Strategy
+Check migration status:
 
-The test suite covers:
+```bash
+npm run migrate:status
+```
 
-- User onboarding.
-- Karma blacklist handling.
-- Fail-closed onboarding when Karma verification is unavailable.
-- Wallet detail access.
-- Wallet funding.
-- Wallet withdrawal.
-- Wallet transfers.
-- Authorization boundaries.
-- Validation failures.
-- Transaction record creation.
-- Atomic rollback behavior.
+Rollback the latest batch:
 
-Current local verification:
+```bash
+npm run migrate:rollback
+```
+
+Migrations live in `src/database/migrations`.
+
+## Testing
+
+Run the test suite:
+
+```bash
+npm test
+```
+
+Run the full local verification gate:
 
 ```bash
 npm run build
@@ -313,25 +342,46 @@ npm run lint
 npm run format:check
 ```
 
+The current suite covers user onboarding, blacklist behavior, fail-closed provider behavior, wallet detail access, funding, withdrawal, transfers, transaction history, validation failures, authorization boundaries, insufficient funds, transaction record creation, and transfer rollback behavior.
+
+External Adjutor calls are mocked in tests; the test suite does not depend on the real Adjutor API.
+
 ## Deployment
 
-Deployment details will be added after the API is implemented and hosted publicly.
+Deployment is planned for Milestone 12.
 
-Target format:
+Target URL format:
 
 ```text
 https://obinna-victor-lendsqr-be-test.<cloud-platform-domain>
 ```
 
+The final deployed URL will be added here after the cloud environment and production MySQL database are provisioned.
+
 ## Tradeoffs and Assumptions
 
-- The MVP uses faux authentication through `x-user-id`.
-- Each onboarded user receives exactly one wallet.
-- Wallet currency defaults to NGN.
-- Funding and withdrawal are simulated because no external payment provider or bank payout provider is required.
-- Transfers are internal wallet-to-wallet transfers.
-- Adjutor calls are mocked in tests.
+- Faux authentication is used because full auth is explicitly out of scope.
+- Each onboarded user receives exactly one NGN wallet.
+- Funding is simulated because no payment provider is required.
+- Withdrawal is simulated as a wallet debit because no bank payout provider is required.
+- Transfers are internal wallet-to-wallet movements.
+- Amounts are accepted in minor units to avoid floating-point money errors.
+- Adjutor provider failures fail closed during onboarding.
+- The transaction table stores successful wallet movements; failed attempts are represented by rejected API responses and rolled-back database changes.
+- Current tests mock repositories and external clients for speed and determinism.
 
-## Roadmap
+## Future Improvements
+
+- Add real authentication and scoped access tokens.
+- Add idempotency keys for funding, withdrawal, and transfer requests.
+- Add request-level correlation IDs for tracing.
+- Add rate limiting and abuse controls.
+- Add a real payment provider for funding.
+- Add a real payout provider for withdrawals.
+- Add DB-backed integration tests in CI with a disposable MySQL service.
+- Add structured production logging and metrics.
+- Add API documentation publishing with OpenAPI.
+
+## Project Tracking
 
 See [TODO.md](TODO.md) and [docs/assessment-checklist.md](docs/assessment-checklist.md).
