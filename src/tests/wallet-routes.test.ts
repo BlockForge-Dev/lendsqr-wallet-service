@@ -9,7 +9,17 @@ import type { WalletService } from '../modules/wallets/wallet.service';
 
 const createdAt = new Date('2026-05-01T10:00:00.000Z');
 
-const createMockService = (): jest.Mocked<Pick<WalletService, 'fundWallet'>> => ({
+const createMockService = (): jest.Mocked<Pick<WalletService, 'fundWallet' | 'getWallet'>> => ({
+  getWallet: jest.fn().mockResolvedValue({
+    wallet: {
+      id: 'wallet-123',
+      userId: 'user-123',
+      balanceMinor: 5_000,
+      currency: 'NGN',
+      createdAt,
+      updatedAt: createdAt,
+    },
+  }),
   fundWallet: jest.fn().mockResolvedValue({
     wallet: {
       id: 'wallet-123',
@@ -49,6 +59,89 @@ const buildTestApp = (service = createMockService()) => {
     service,
   };
 };
+
+describe('GET /api/v1/wallets/:walletId', () => {
+  it('returns a wallet for an authenticated owner request', async () => {
+    const { app, service } = buildTestApp();
+
+    const response = await request(app)
+      .get('/api/v1/wallets/wallet-123')
+      .set('x-user-id', 'user-123')
+      .expect(200);
+
+    expect(service.getWallet).toHaveBeenCalledWith({
+      walletId: 'wallet-123',
+      userId: 'user-123',
+    });
+    expect(response.body).toEqual({
+      success: true,
+      message: 'Wallet retrieved successfully',
+      data: {
+        wallet: {
+          id: 'wallet-123',
+          userId: 'user-123',
+          balanceMinor: 5_000,
+          currency: 'NGN',
+          createdAt: createdAt.toISOString(),
+          updatedAt: createdAt.toISOString(),
+        },
+      },
+    });
+  });
+
+  it('rejects unauthenticated wallet requests', async () => {
+    const { app, service } = buildTestApp();
+
+    const response = await request(app).get('/api/v1/wallets/wallet-123').expect(401);
+
+    expect(service.getWallet).not.toHaveBeenCalled();
+    expect(response.body).toEqual({
+      success: false,
+      message: 'x-user-id header is required',
+      errorCode: 'MISSING_AUTH_HEADER',
+    });
+  });
+
+  it('returns forbidden when the service rejects wallet ownership', async () => {
+    const service = createMockService();
+    jest
+      .mocked(service.getWallet)
+      .mockRejectedValue(
+        AppError.forbidden('You are not allowed to operate on this wallet', 'WALLET_FORBIDDEN'),
+      );
+    const { app } = buildTestApp(service);
+
+    const response = await request(app)
+      .get('/api/v1/wallets/wallet-123')
+      .set('x-user-id', 'different-user')
+      .expect(403);
+
+    expect(response.body).toEqual({
+      success: false,
+      message: 'You are not allowed to operate on this wallet',
+      errorCode: 'WALLET_FORBIDDEN',
+    });
+  });
+
+  it('returns not found when the service cannot find the wallet', async () => {
+    const service = createMockService();
+    jest
+      .mocked(service.getWallet)
+      .mockRejectedValue(AppError.notFound('Wallet not found', 'WALLET_NOT_FOUND'));
+    const { app } = buildTestApp(service);
+
+    const response = await request(app)
+      .get('/api/v1/wallets/missing-wallet')
+      .set('x-user-id', 'user-123')
+      .expect(404);
+
+    expect(response.body).toEqual({
+      success: false,
+      message: 'Wallet not found',
+      errorCode: 'WALLET_NOT_FOUND',
+    });
+  });
+});
 
 describe('POST /api/v1/wallets/:walletId/fund', () => {
   it('funds a wallet for an authenticated owner request', async () => {

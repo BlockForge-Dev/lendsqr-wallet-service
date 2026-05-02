@@ -19,6 +19,10 @@ export const fundWalletSchema = {
   body: walletMutationBodySchema,
 };
 
+export const getWalletSchema = {
+  params: walletIdParamsSchema,
+};
+
 export const withdrawWalletSchema = {
   params: walletIdParamsSchema,
   body: walletMutationBodySchema,

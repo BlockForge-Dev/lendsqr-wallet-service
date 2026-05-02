@@ -215,6 +215,30 @@ describe('UserService', () => {
     expect(dependencies.transactions.run).not.toHaveBeenCalled();
   });
 
+  it('fails closed without persistence when Karma verification cannot be completed', async () => {
+    const dependencies = createDependencies();
+    jest
+      .mocked(dependencies.blacklist.ensureIdentitiesAreAllowed)
+      .mockRejectedValue(
+        new AppError(
+          'Karma blacklist verification could not be completed',
+          503,
+          'BLACKLIST_PROVIDER_UNAVAILABLE',
+        ),
+      );
+    const service = new UserService(dependencies);
+
+    await expect(service.createUser(input)).rejects.toMatchObject({
+      statusCode: 503,
+      errorCode: 'BLACKLIST_PROVIDER_UNAVAILABLE',
+    });
+
+    expect(dependencies.users.create).not.toHaveBeenCalled();
+    expect(dependencies.wallets.create).not.toHaveBeenCalled();
+    expect(dependencies.blacklistChecks.attachToUser).not.toHaveBeenCalled();
+    expect(dependencies.transactions.run).not.toHaveBeenCalled();
+  });
+
   it('does not create a wallet if user creation fails inside the transaction', async () => {
     const dependencies = createDependencies();
     jest.mocked(dependencies.users.create).mockRejectedValue(new Error('insert failed'));

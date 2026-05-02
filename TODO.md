@@ -112,13 +112,15 @@ Note: Knex CLI loading was verified, but local migration execution is pending be
 
 ## Milestone 10: Test Coverage and Negative Scenarios
 
-- [ ] Cover successful flows.
-- [ ] Cover validation failures.
-- [ ] Cover authorization failures.
-- [ ] Cover blacklist behavior.
-- [ ] Cover insufficient funds.
-- [ ] Cover transfer rollback behavior.
-- [ ] Ensure tests do not depend on the real Adjutor API.
+- [x] Cover successful flows.
+- [x] Cover validation failures.
+- [x] Cover authorization failures.
+- [x] Cover blacklist behavior.
+- [x] Cover insufficient funds.
+- [x] Cover transfer rollback behavior.
+- [x] Ensure tests do not depend on the real Adjutor API.
+
+Note: Milestone 10 also closed the remaining wallet detail endpoint requirement with owner-only access tests.
 
 ## Milestone 11: README and Documentation
 

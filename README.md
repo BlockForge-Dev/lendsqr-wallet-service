@@ -4,9 +4,9 @@ This project implements a wallet MVP for Demo Credit, a lending application. The
 
 ## Status
 
-Current milestone: Milestone 9 - Transaction History implemented.
+Current milestone: Milestone 10 - Test Coverage and Negative Scenarios implemented.
 
-Next milestone: Milestone 10 - Test Coverage and Negative Scenarios.
+Next milestone: Milestone 11 - README and Documentation.
 
 ## Problem Statement
 
@@ -36,8 +36,8 @@ Demo Credit needs a backend wallet service that allows eligible users to receive
 | Wallet transfer                 | `POST /api/v1/wallets/:walletId/transfers`    | Implemented |
 | Karma blacklist check           | Adjutor client isolated behind service        | Implemented |
 | Faux authentication             | `x-user-id` request header middleware         | Implemented |
-| Unit/integration tests          | Jest and Supertest coverage                   | In progress |
-| Positive and negative scenarios | Success, validation, auth, and rollback tests | In progress |
+| Unit/integration tests          | Jest and Supertest coverage                   | Implemented |
+| Positive and negative scenarios | Success, validation, auth, and rollback tests | Implemented |
 | Public deployment               | Cloud-hosted API URL                          | Planned     |
 | Public documentation page       | Google Doc or Notion page                     | Planned     |
 | Loom review video               | Under 3 minutes with requirement mapping      | Planned     |
@@ -87,6 +87,18 @@ Onboarding flow:
 - Attach successful blacklist check records to the created user.
 
 Successful response uses the shared success envelope and returns the created user and wallet.
+
+## Wallet Detail
+
+`GET /api/v1/wallets/:walletId` returns the authenticated user's wallet.
+
+Wallet detail flow:
+
+- Require faux auth through `x-user-id`.
+- Validate the `walletId` route parameter.
+- Confirm the wallet exists.
+- Confirm the authenticated user owns the wallet.
+- Return the wallet without opening a balance mutation transaction.
 
 ## Wallet Funding
 
@@ -278,10 +290,12 @@ ADJUTOR_API_KEY=
 
 ## Testing Strategy
 
-Tests will cover:
+The test suite covers:
 
 - User onboarding.
 - Karma blacklist handling.
+- Fail-closed onboarding when Karma verification is unavailable.
+- Wallet detail access.
 - Wallet funding.
 - Wallet withdrawal.
 - Wallet transfers.
@@ -289,6 +303,15 @@ Tests will cover:
 - Validation failures.
 - Transaction record creation.
 - Atomic rollback behavior.
+
+Current local verification:
+
+```bash
+npm run build
+npm test
+npm run lint
+npm run format:check
+```
 
 ## Deployment
 

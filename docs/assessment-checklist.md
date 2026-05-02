@@ -57,7 +57,7 @@ This checklist converts the Lendsqr Backend Engineer Assessment into acceptance 
 
 - [x] `GET /health`.
 - [x] `POST /api/v1/users`.
-- [ ] `GET /api/v1/wallets/:walletId`.
+- [x] `GET /api/v1/wallets/:walletId`.
 - [x] `POST /api/v1/wallets/:walletId/fund`.
 - [x] `POST /api/v1/wallets/:walletId/withdraw`.
 - [x] `POST /api/v1/wallets/:walletId/transfers`.
@@ -88,7 +88,11 @@ This checklist converts the Lendsqr Backend Engineer Assessment into acceptance 
 - [x] Transfer same-wallet rejection test.
 - [x] Unauthorized wallet access tests.
 - [x] External Adjutor API mocked in tests.
-- [ ] Test database setup documented.
+- [x] Wallet detail success and ownership tests.
+- [x] Fail-closed Karma provider unavailable test.
+- [x] Transfer missing sender test.
+- [x] Transfer recipient credit failure test.
+- [x] Test database setup documented.
 
 ## Documentation Requirements
 
@@ -138,15 +142,15 @@ This checklist converts the Lendsqr Backend Engineer Assessment into acceptance 
 
 ## Core Invariants
 
-- [ ] A blacklisted user must never be onboarded.
-- [ ] A user must not be created without a wallet.
-- [ ] A wallet balance must never be negative.
-- [ ] Every balance change must create a transaction record.
-- [ ] Transfers must be atomic.
-- [ ] A failed transfer must not debit the sender.
-- [ ] A failed transfer must not credit the recipient.
-- [ ] A user must not operate on another user's wallet.
-- [ ] Amounts must be positive.
-- [ ] Money values must not use floating-point arithmetic.
-- [ ] Transaction references must be unique.
-- [ ] Database transactions must be used for wallet mutations.
+- [x] A blacklisted user must never be onboarded.
+- [x] A user must not be created without a wallet.
+- [x] A wallet balance must never be negative.
+- [x] Every balance change must create a transaction record.
+- [x] Transfers must be atomic.
+- [x] A failed transfer must not debit the sender.
+- [x] A failed transfer must not credit the recipient.
+- [x] A user must not operate on another user's wallet.
+- [x] Amounts must be positive.
+- [x] Money values must not use floating-point arithmetic.
+- [x] Transaction references must be unique.
+- [x] Database transactions must be used for wallet mutations.

@@ -264,6 +264,26 @@ describe('WalletService.transferWallet', () => {
     expect(dependencies.transactions.create).not.toHaveBeenCalled();
   });
 
+  it('rejects missing sender wallets without crediting recipient', async () => {
+    const dependencies = createDependencies();
+    const service = new WalletService(dependencies);
+
+    await expect(
+      service.transferWallet({
+        senderWalletId: 'missing-wallet',
+        senderUserId: 'sender-user',
+        recipientWalletId: recipientWallet.id,
+        amountMinor: 3_000,
+      }),
+    ).rejects.toMatchObject({
+      statusCode: 404,
+      errorCode: 'WALLET_NOT_FOUND',
+    });
+
+    expect(dependencies.wallets.updateBalance).not.toHaveBeenCalled();
+    expect(dependencies.transactions.create).not.toHaveBeenCalled();
+  });
+
   it('rejects unauthorized senders without mutating either wallet', async () => {
     const dependencies = createDependencies();
     const service = new WalletService(dependencies);
@@ -322,6 +342,29 @@ describe('WalletService.transferWallet', () => {
 
     expect(dependencies.wallets.updateBalance).toHaveBeenCalledTimes(1);
     expect(dependencies.wallets.updateBalance).toHaveBeenCalledWith('wallet-b', 7_000, trx);
+    expect(dependencies.transactions.create).not.toHaveBeenCalled();
+  });
+
+  it('does not create transfer records when recipient credit fails', async () => {
+    const dependencies = createDependencies();
+    jest
+      .mocked(dependencies.wallets.updateBalance)
+      .mockResolvedValueOnce(updatedSenderWallet)
+      .mockRejectedValueOnce(new Error('credit failed'));
+    const service = new WalletService(dependencies);
+
+    await expect(
+      service.transferWallet({
+        senderWalletId: senderWallet.id,
+        senderUserId: 'sender-user',
+        recipientWalletId: recipientWallet.id,
+        amountMinor: 3_000,
+      }),
+    ).rejects.toThrow('credit failed');
+
+    expect(dependencies.transactionRunner.run).toHaveBeenCalledTimes(1);
+    expect(dependencies.wallets.updateBalance).toHaveBeenNthCalledWith(1, 'wallet-b', 7_000, trx);
+    expect(dependencies.wallets.updateBalance).toHaveBeenNthCalledWith(2, 'wallet-a', 5_000, trx);
     expect(dependencies.transactions.create).not.toHaveBeenCalled();
   });
 });

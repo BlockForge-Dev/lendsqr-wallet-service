@@ -5,6 +5,7 @@ import { validateRequest } from '../../middlewares/validate-request';
 import { WalletController, walletController } from './wallet.controller';
 import {
   fundWalletSchema,
+  getWalletSchema,
   listWalletTransactionsSchema,
   transferWalletSchema,
   withdrawWalletSchema,
@@ -12,6 +13,8 @@ import {
 
 export const createWalletRouter = (controller: WalletController = walletController): Router => {
   const router = Router();
+
+  router.get('/:walletId', fauxAuth, validateRequest(getWalletSchema), controller.getWallet);
 
   router.post(
     '/:walletId/fund',

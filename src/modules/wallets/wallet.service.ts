@@ -12,6 +12,8 @@ import { walletRepository } from './wallet.repository';
 import type {
   FundWalletInput,
   FundWalletResult,
+  GetWalletInput,
+  GetWalletResult,
   ListWalletTransactionsInput,
   ListWalletTransactionsResult,
   TransferWalletInput,
@@ -41,6 +43,22 @@ export class WalletService {
       transactionRunner,
     },
   ) {}
+
+  async getWallet(input: GetWalletInput): Promise<GetWalletResult> {
+    const wallet = await this.dependencies.wallets.findById(input.walletId);
+
+    if (!wallet) {
+      throw AppError.notFound('Wallet not found', 'WALLET_NOT_FOUND');
+    }
+
+    if (wallet.userId !== input.userId) {
+      throw AppError.forbidden('You are not allowed to operate on this wallet', 'WALLET_FORBIDDEN');
+    }
+
+    return {
+      wallet,
+    };
+  }
 
   async fundWallet(input: FundWalletInput): Promise<FundWalletResult> {
     assertPositiveMinorUnitAmount(input.amountMinor);

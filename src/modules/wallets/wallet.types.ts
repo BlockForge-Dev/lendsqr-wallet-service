@@ -41,6 +41,15 @@ export type FundWalletInput = {
   description?: string;
 };
 
+export type GetWalletInput = {
+  walletId: string;
+  userId: string;
+};
+
+export type GetWalletResult = {
+  wallet: WalletRecord;
+};
+
 export type FundWalletResult = {
   wallet: WalletRecord;
   transaction: TransactionRecord;

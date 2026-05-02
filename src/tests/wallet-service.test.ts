@@ -68,7 +68,62 @@ const createDependencies = (
   };
 };
 
-describe('WalletService.fundWallet', () => {
+describe('WalletService', () => {
+  describe('getWallet', () => {
+    it('returns a wallet after checking ownership', async () => {
+      const dependencies = createDependencies();
+      const service = new WalletService(dependencies);
+
+      await expect(
+        service.getWallet({
+          walletId: 'wallet-123',
+          userId: 'user-123',
+        }),
+      ).resolves.toEqual({
+        wallet,
+      });
+
+      expect(dependencies.wallets.findById).toHaveBeenCalledWith('wallet-123');
+      expect(dependencies.transactionRunner.run).not.toHaveBeenCalled();
+      expect(dependencies.transactions.create).not.toHaveBeenCalled();
+    });
+
+    it('rejects missing wallets', async () => {
+      const dependencies = createDependencies();
+      jest.mocked(dependencies.wallets.findById).mockResolvedValue(null);
+      const service = new WalletService(dependencies);
+
+      await expect(
+        service.getWallet({
+          walletId: 'missing-wallet',
+          userId: 'user-123',
+        }),
+      ).rejects.toMatchObject({
+        statusCode: 404,
+        errorCode: 'WALLET_NOT_FOUND',
+      });
+
+      expect(dependencies.transactionRunner.run).not.toHaveBeenCalled();
+    });
+
+    it('rejects access to another user wallet', async () => {
+      const dependencies = createDependencies();
+      const service = new WalletService(dependencies);
+
+      await expect(
+        service.getWallet({
+          walletId: 'wallet-123',
+          userId: 'different-user',
+        }),
+      ).rejects.toMatchObject({
+        statusCode: 403,
+        errorCode: 'WALLET_FORBIDDEN',
+      });
+
+      expect(dependencies.transactionRunner.run).not.toHaveBeenCalled();
+    });
+  });
+
   it('funds a wallet and creates a FUND transaction atomically', async () => {
     const dependencies = createDependencies();
     const service = new WalletService(dependencies);
