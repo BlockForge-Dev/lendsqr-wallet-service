@@ -118,6 +118,8 @@ This checklist converts the Lendsqr Backend Engineer Assessment into acceptance 
 
 - [ ] Public GitHub repository is available.
 - [ ] Git commit history is clean and intentional.
+- [x] Deployment configuration is included.
+- [x] Deployment guide is documented.
 - [ ] API is deployed publicly.
 - [ ] Deployment URL follows the requested naming format as closely as the platform allows.
 - [ ] Public documentation page exists.

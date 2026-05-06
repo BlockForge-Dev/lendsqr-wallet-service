@@ -137,12 +137,18 @@ Note: the README now includes the deployment section and target URL format. The 
 
 ## Milestone 12: Deployment
 
-- [ ] Choose cloud platform.
-- [ ] Provision MySQL.
-- [ ] Configure production environment variables.
-- [ ] Run production migrations.
+- [x] Choose cloud platform.
+- [x] Add Docker deployment configuration.
+- [x] Add Render service blueprint.
+- [x] Add managed MySQL SSL configuration.
+- [x] Document production environment variables.
+- [ ] Provision or confirm production MySQL credentials.
+- [ ] Configure production environment variables in Render.
+- [ ] Run production migrations against the production database.
 - [ ] Deploy API.
 - [ ] Smoke-test health endpoint and core flows.
+
+Note: deployment configuration targets Render plus Aiven MySQL. Actual deployment requires Render/GitHub access and secret environment variables that should not be committed.
 
 ## Milestone 13: Public Submission Document
 

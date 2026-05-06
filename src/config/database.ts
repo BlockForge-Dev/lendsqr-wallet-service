@@ -8,6 +8,17 @@ type DatabaseConfigOptions = {
   pool?: Knex.PoolConfig;
 };
 
+const buildSslConfig = (): Record<string, string | boolean> | undefined => {
+  if (!env.DATABASE_SSL) {
+    return undefined;
+  }
+
+  return {
+    rejectUnauthorized: env.DATABASE_SSL_REJECT_UNAUTHORIZED,
+    ...(env.DATABASE_SSL_CA ? { ca: env.DATABASE_SSL_CA.replace(/\\n/g, '\n') } : {}),
+  };
+};
+
 export const buildDatabaseConfig = (options: DatabaseConfigOptions = {}): Knex.Config => ({
   client: 'mysql2',
   connection: {
@@ -18,6 +29,7 @@ export const buildDatabaseConfig = (options: DatabaseConfigOptions = {}): Knex.C
     database: options.databaseName ?? env.DATABASE_NAME,
     supportBigNumbers: true,
     bigNumberStrings: true,
+    ssl: buildSslConfig(),
   },
   migrations: {
     directory: path.resolve(__dirname, '../database/migrations'),

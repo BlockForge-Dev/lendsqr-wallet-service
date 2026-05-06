@@ -4,11 +4,11 @@ This project implements a wallet MVP for Demo Credit, a lending application. The
 
 ## Status
 
-Current milestone: Milestone 11 - README and Documentation implemented.
+Current milestone: Milestone 12 - Deployment configuration implemented.
 
-Next milestone: Milestone 12 - Deployment.
+Next milestone: Milestone 12 - Cloud dashboard deployment and smoke test.
 
-Deployment URL: pending Milestone 12.
+Deployment URL: pending Render deploy.
 
 ## Problem Statement
 
@@ -38,7 +38,7 @@ A wallet balance should never change without a durable transaction record explai
 | Faux authentication         | `x-user-id` request header middleware              | Implemented |
 | Positive and negative tests | Jest and Supertest coverage                        | Implemented |
 | README and ER diagram       | Design document plus `docs/er-diagram.png`         | Implemented |
-| Public deployment           | Cloud-hosted API URL                               | Pending     |
+| Public deployment           | Render Docker service configuration                | In progress |
 | Public documentation page   | Google Doc or Notion page                          | Pending     |
 | Loom review video           | Under 3 minutes                                    | Pending     |
 
@@ -70,6 +70,7 @@ src/
   tests/
 docs/
   api-examples.md
+  deployment.md
   er-diagram.md
   er-diagram.png
 ```
@@ -289,17 +290,20 @@ The server listens on `PORT` and defaults to `3000`.
 
 ## Environment Variables
 
-| Variable            | Required                       | Description                          |
-| ------------------- | ------------------------------ | ------------------------------------ |
-| `NODE_ENV`          | Yes                            | Runtime environment                  |
-| `PORT`              | No                             | HTTP server port, defaults to `3000` |
-| `DATABASE_HOST`     | Yes                            | MySQL host                           |
-| `DATABASE_PORT`     | Yes                            | MySQL port                           |
-| `DATABASE_USER`     | Yes                            | MySQL user                           |
-| `DATABASE_PASSWORD` | No                             | MySQL password                       |
-| `DATABASE_NAME`     | Yes                            | Database name                        |
-| `ADJUTOR_BASE_URL`  | Yes                            | Adjutor API base URL                 |
-| `ADJUTOR_API_KEY`   | Yes for real onboarding checks | Adjutor API key                      |
+| Variable                           | Required                       | Description                          |
+| ---------------------------------- | ------------------------------ | ------------------------------------ |
+| `NODE_ENV`                         | Yes                            | Runtime environment                  |
+| `PORT`                             | No                             | HTTP server port, defaults to `3000` |
+| `DATABASE_HOST`                    | Yes                            | MySQL host                           |
+| `DATABASE_PORT`                    | Yes                            | MySQL port                           |
+| `DATABASE_USER`                    | Yes                            | MySQL user                           |
+| `DATABASE_PASSWORD`                | No                             | MySQL password                       |
+| `DATABASE_NAME`                    | Yes                            | Database name                        |
+| `DATABASE_SSL`                     | No                             | Enable MySQL TLS/SSL                 |
+| `DATABASE_SSL_REJECT_UNAUTHORIZED` | No                             | Verify MySQL TLS certificate         |
+| `DATABASE_SSL_CA`                  | No                             | Optional MySQL CA certificate        |
+| `ADJUTOR_BASE_URL`                 | Yes                            | Adjutor API base URL                 |
+| `ADJUTOR_API_KEY`                  | Yes for real onboarding checks | Adjutor API key                      |
 
 See [.env.example](.env.example).
 
@@ -348,15 +352,21 @@ External Adjutor calls are mocked in tests; the test suite does not depend on th
 
 ## Deployment
 
-Deployment is planned for Milestone 12.
+Deployment is configured for Render using Docker and Aiven MySQL.
 
-Target URL format:
+Target URL:
 
 ```text
-https://obinna-victor-lendsqr-be-test.<cloud-platform-domain>
+https://obinna-victor-lendsqr-be-test.onrender.com
 ```
 
-The final deployed URL will be added here after the cloud environment and production MySQL database are provisioned.
+Deployment files:
+
+- [Dockerfile](Dockerfile)
+- [render.yaml](render.yaml)
+- [docs/deployment.md](docs/deployment.md)
+
+The final smoke-tested public URL will be confirmed after the Render service is connected to GitHub and secret environment variables are set in the dashboard.
 
 ## Tradeoffs and Assumptions
 
