@@ -33,7 +33,13 @@ export const errorHandler: ErrorRequestHandler = (error, _req, res, _next) => {
   }
 
   logger.error('Unhandled application error', {
+    name: error instanceof Error ? error.name : 'UnknownError',
     message: error instanceof Error ? error.message : 'Unknown error',
+    stack: error instanceof Error ? error.stack : undefined,
+    code:
+      typeof error === 'object' && error !== null && 'code' in error
+        ? (error as { code?: unknown }).code
+        : undefined,
   });
 
   return res.status(500).json({
