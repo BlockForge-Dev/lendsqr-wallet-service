@@ -23,6 +23,8 @@ const getMigrationExtension = (): 'ts' | 'js' => {
   return __filename.endsWith('.ts') ? 'ts' : 'js';
 };
 
+const migrationExtension = getMigrationExtension();
+
 export const buildDatabaseConfig = (options: DatabaseConfigOptions = {}): Knex.Config => ({
   client: 'mysql2',
   connection: {
@@ -37,7 +39,8 @@ export const buildDatabaseConfig = (options: DatabaseConfigOptions = {}): Knex.C
   },
   migrations: {
     directory: path.resolve(__dirname, '../database/migrations'),
-    extension: getMigrationExtension(),
+    extension: migrationExtension,
+    loadExtensions: [`.${migrationExtension}`],
     tableName: 'knex_migrations',
   },
   pool: options.pool ?? {
