@@ -5,6 +5,7 @@ import { db } from '../../database/knex';
 import type { DatabaseTransaction } from '../../database/transaction';
 import {
   ADJUTOR_KARMA_PROVIDER,
+  type AdjutorKarmaLookupResponse,
   type BlacklistCheckRecord,
   type CreateBlacklistCheckInput,
 } from './blacklist.types';
@@ -16,8 +17,41 @@ type BlacklistCheckRow = {
   identity_type: BlacklistCheckRecord['identityType'];
   provider: typeof ADJUTOR_KARMA_PROVIDER;
   is_blacklisted: number | boolean;
-  response_payload: string | Record<string, unknown>;
+  response_payload: Buffer | string | Record<string, unknown> | null;
   created_at: Date;
+};
+
+export const parseBlacklistResponsePayload = (
+  payload: BlacklistCheckRow['response_payload'],
+): AdjutorKarmaLookupResponse => {
+  if (!payload) {
+    return {
+      data: null,
+    };
+  }
+
+  if (Buffer.isBuffer(payload)) {
+    return parseBlacklistResponsePayload(payload.toString('utf8'));
+  }
+
+  if (typeof payload === 'string') {
+    try {
+      const parsed = JSON.parse(payload) as AdjutorKarmaLookupResponse | string;
+
+      return typeof parsed === 'string' ? parseBlacklistResponsePayload(parsed) : parsed;
+    } catch {
+      return {
+        status: 'unknown',
+        message: 'Stored provider payload could not be parsed',
+        data: null,
+        meta: {
+          rawPayload: payload,
+        },
+      };
+    }
+  }
+
+  return payload as AdjutorKarmaLookupResponse;
 };
 
 const toRecord = (row: BlacklistCheckRow): BlacklistCheckRecord => ({
@@ -27,10 +61,7 @@ const toRecord = (row: BlacklistCheckRow): BlacklistCheckRecord => ({
   identityType: row.identity_type,
   provider: row.provider,
   isBlacklisted: Boolean(row.is_blacklisted),
-  responsePayload:
-    typeof row.response_payload === 'string'
-      ? (JSON.parse(row.response_payload) as BlacklistCheckRecord['responsePayload'])
-      : (row.response_payload as BlacklistCheckRecord['responsePayload']),
+  responsePayload: parseBlacklistResponsePayload(row.response_payload),
   createdAt: row.created_at,
 });
 
