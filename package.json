@@ -2,7 +2,7 @@
   "name": "lendsqr-wallet-service",
   "version": "1.0.0",
   "description": "Wallet MVP for the Lendsqr Backend Engineer Assessment.",
-  "main": "dist/server.js",
+  "main": "dist/src/server.js",
   "directories": {
     "doc": "docs"
   },
@@ -18,7 +18,7 @@
     "migrate:rollback:prod": "knex --knexfile dist/knexfile.js migrate:rollback --env production",
     "migrate:status": "knex --knexfile knexfile.ts migrate:status",
     "migrate:status:prod": "knex --knexfile dist/knexfile.js migrate:status --env production",
-    "start": "node dist/server.js",
+    "start": "node dist/src/server.js",
     "test": "jest --runInBand",
     "test:watch": "jest --watch"
   },
